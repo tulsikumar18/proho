@@ -39,10 +39,11 @@ The following authoritative specifications guide the project:
 
 Ensure the following tools are installed on your machine:
 - **Python**: 3.10+ (`python3 --version`)
-- **PostgreSQL**: 14+ (`psql --version`)
+- **SQLite 3**: Built into Python standard library (`sqlite3`)
 - **Node.js**: 20+ (`node --version`)
 - **npm**: 10+ (`npm --version`)
 - **Git**: (`git --version`)
+*(Note: PostgreSQL is required for production AWS deployment, but local development uses SQLite 3 without requiring a PostgreSQL server).*
 
 ---
 
@@ -55,13 +56,20 @@ cp .env.example .env
 ```
 
 ### Backend (Django REST Framework)
+Local development runs on SQLite by default:
 ```bash
 cd backend
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 python manage.py migrate
 python manage.py runserver
+```
+
+Run automated backend tests:
+```bash
+pytest -v
+pytest --cov=apps --cov-report=term-missing
 ```
 
 ### Admin Web (React + TypeScript)

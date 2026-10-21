@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [Phase 1] - 2026-10-21
+### Added
+- SQLite-first backend architecture (`backend/db.sqlite3`) for local development without PostgreSQL dependencies.
+- Documented PostgreSQL production migration configuration and fail-safe environment variable checks (`DB_ENGINE`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`).
+- Custom `User` model (`apps.accounts.models.User`) with UUID primary key, phone-based identity, preferred language (`en`/`hi`), and explicit roles (`CHANNEL_PARTNER`, `ADMIN`, `SUPERADMIN`).
+- `CustomUserManager` supporting phone-based user and superuser creation.
+- Custom authentication permissions: `IsPartner`, `IsAdmin`, `IsSuperAdmin`, `IsOwnerOrAdmin`.
+- RFC-7807 inspired standardized API exception handler returning `{ "success": false, "error": { "code", "message", "details" } }`.
+- Request Correlation ID middleware (`X-Correlation-ID`) with context-var propagation and non-sensitive structured logging.
+- Read-only, append-only `AuditLog` model and `AuditService` with automatic redaction of sensitive credentials (passwords, tokens, OTPs, full bank details).
+- OpenAPI documentation generator using `drf-spectacular` (`/api/v1/schema/`, `/api/v1/docs/`).
+- 19 automated pytest tests in SQLite test environment covering user creation, permissions, errors, correlation ID, audit logging, and database configuration with 92% code coverage.
+- Configured code quality tools: `flake8` and `black`.
+
 ## [Phase 0] - 2026-10-21
 ### Added
 - Initialized empty Git repository on branch `main`.

@@ -27,10 +27,15 @@ wheels/
 *.egg
 .pytest_cache/
 .coverage
-htmlcov/
 *.sqlite3
+*.sqlite3-journal
+db.sqlite3
 media/
 staticfiles/
+venv/
+.venv/
+env/
+.env*/
 
 # Node / React / React Native / Expo
 node_modules/
