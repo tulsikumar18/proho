@@ -66,6 +66,22 @@ from apps.visits.views import (
     VisitOtpRequestView,
     VisitOtpVerifyView,
 )
+from apps.finance.views import (
+    FinancialSummaryView,
+    PartnerLedgerListView,
+    PartnerInvoiceListView,
+    PartnerInvoiceDetailView,
+    PartnerPayoutListCreateView,
+    PartnerPayoutDetailView,
+    AdminPayoutListView,
+    AdminPayoutDetailView,
+    AdminPayoutReviewView,
+    AdminPayoutDisburseView,
+    AdminDealListCreateView,
+    AdminDealRegisterView,
+    AdminDealReverseView,
+    AdminLedgerAdjustmentView,
+)
 
 v1_patterns = [
     # Core health & infrastructure
@@ -222,6 +238,70 @@ v1_patterns = [
         "visits/<uuid:pk>/verify-otp/",
         VisitOtpVerifyView.as_view(),
         name="visit_otp_verify",
+    ),
+    # Finance, Ledger, Invoices & Payouts (Phase 5)
+    path("finance/summary/", FinancialSummaryView.as_view(), name="finance_summary"),
+    path("finance/ledger/", PartnerLedgerListView.as_view(), name="finance_ledger"),
+    path(
+        "finance/invoices/",
+        PartnerInvoiceListView.as_view(),
+        name="finance_invoice_list",
+    ),
+    path(
+        "finance/invoices/<uuid:pk>/",
+        PartnerInvoiceDetailView.as_view(),
+        name="finance_invoice_detail",
+    ),
+    path(
+        "finance/payouts/",
+        PartnerPayoutListCreateView.as_view(),
+        name="finance_payout_list_create",
+    ),
+    path(
+        "finance/payouts/<uuid:pk>/",
+        PartnerPayoutDetailView.as_view(),
+        name="finance_payout_detail",
+    ),
+    # Admin Finance & Payouts (Phase 5)
+    path(
+        "admin/finance/payouts/",
+        AdminPayoutListView.as_view(),
+        name="admin_payout_list",
+    ),
+    path(
+        "admin/finance/payouts/<uuid:pk>/",
+        AdminPayoutDetailView.as_view(),
+        name="admin_payout_detail",
+    ),
+    path(
+        "admin/finance/payouts/<uuid:pk>/review/",
+        AdminPayoutReviewView.as_view(),
+        name="admin_payout_review",
+    ),
+    path(
+        "admin/finance/payouts/<uuid:pk>/disburse/",
+        AdminPayoutDisburseView.as_view(),
+        name="admin_payout_disburse",
+    ),
+    path(
+        "admin/finance/deals/",
+        AdminDealListCreateView.as_view(),
+        name="admin_deal_list_create",
+    ),
+    path(
+        "admin/finance/deals/<uuid:pk>/register/",
+        AdminDealRegisterView.as_view(),
+        name="admin_deal_register",
+    ),
+    path(
+        "admin/finance/deals/<uuid:pk>/reverse/",
+        AdminDealReverseView.as_view(),
+        name="admin_deal_reverse",
+    ),
+    path(
+        "admin/finance/ledger/adjustment/",
+        AdminLedgerAdjustmentView.as_view(),
+        name="admin_ledger_adjustment",
     ),
     # Authorization foundation test endpoints
     path("test/partner/", PartnerTestView.as_view(), name="test_partner_endpoint"),

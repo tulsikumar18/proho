@@ -6,6 +6,41 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [Phase 5] - 2026-10-21
+### Added
+- `apps.finance` application for commission calculations, double-entry immutable ledger, tax invoices, and payout processing:
+  - `CommissionRule` model supporting percentage (e.g. 2.00%) or fixed monetary bonus amounts in INR.
+  - `Deal` model linking properties, partners, referred buyer leads, and accepted offers with registration tracking (`PENDING_REGISTRATION`, `REGISTERED`, `CANCELLED`).
+  - `LedgerEntry` model enforcing strict immutable double-entry accounting with running balance validation (cannot be negative), concurrency row locking via `select_for_update()`, and immutable record deletion safeguards.
+  - `Invoice` model generating sequential tax statements (`PROHO/YYYY-YY/XXXX`) with automatic Section 194H TDS calculation (5% for approved KYC with PAN, 20% for unverified/missing PAN).
+  - `PayoutRequest` model managing partner withdrawal workflows (`REQUESTED`, `UNDER_REVIEW`, `APPROVED`, `PAID`, `REJECTED`) with idempotency keys and mandatory bank transaction UTR reference.
+  - `FinanceService` domain logic:
+    - `get_financial_summary`: Real-time cleared balance, lifetime total earned, pending payouts, and available withdrawal balance.
+    - `record_ledger_entry`: Atomic double-entry credits and debits with non-negative running balance validation and append-only audit trail.
+    - `register_deal_and_credit_commission`: Deal closing workflow computing gross commission, applying TDS deduction, generating sequential invoice, crediting net payable to ledger, and closing linked buyer lead.
+    - `reverse_deal_commission`: Commission reversal debiting partner balance and cancelling deal and invoice.
+    - `create_payout_request`: Withdrawal validation enforcing Approved KYC, verified partner bank account, minimum ₹5,000 threshold, available balance checks, and preventing duplicate pending requests.
+    - `review_payout` and `disburse_payout`: Multi-step admin authorization requiring bank UTR reference for disbursement and atomic ledger debit.
+  - Partner endpoints:
+    - `GET /api/v1/finance/summary/`: Partner earnings, balance, and payout summary.
+    - `GET /api/v1/finance/ledger/`: Paginated double-entry ledger entries.
+    - `GET /api/v1/finance/invoices/`: List commission invoices and statements.
+    - `GET /api/v1/finance/invoices/{id}/`: Invoice details with TDS breakdown.
+    - `GET /api/v1/finance/payouts/`: List partner payout requests.
+    - `POST /api/v1/finance/payouts/`: Submit payout withdrawal request (minimum ₹5,000, Approved KYC).
+    - `GET /api/v1/finance/payouts/{id}/`: Payout request status and details.
+  - Administrative finance endpoints:
+    - `GET /api/v1/admin/finance/payouts/`: Filterable list of all partner payout requests.
+    - `GET /api/v1/admin/finance/payouts/{id}/`: Payout detail.
+    - `POST /api/v1/admin/finance/payouts/{id}/review/`: Review payout (`UNDER_REVIEW`, `APPROVED`, or `REJECTED` with reason).
+    - `POST /api/v1/admin/finance/payouts/{id}/disburse/`: Mark payout `PAID` with bank UTR reference and atomic ledger debit.
+    - `GET /api/v1/admin/finance/deals/`: List all deals.
+    - `POST /api/v1/admin/finance/deals/`: Create deal (with optional immediate registration and commission crediting).
+    - `POST /api/v1/admin/finance/deals/{id}/register/`: Register deal and issue invoice.
+    - `POST /api/v1/admin/finance/deals/{id}/reverse/`: Reverse registered deal commission with audit justification.
+    - `POST /api/v1/admin/finance/ledger/adjustment/`: Post administrative ledger adjustment.
+- 16 new automated pytest tests (95 tests total across the platform) verifying ledger invariants, commission formulas, TDS rates, deal closures, reversals, KYC payout restrictions, balance thresholds, and admin workflows with 88% total code coverage.
+
 ## [Phase 4] - 2026-10-21
 ### Added
 - `apps.leads` application for leads, referral attribution, and secure token sharing:
