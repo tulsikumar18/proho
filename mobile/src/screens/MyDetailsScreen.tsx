@@ -52,10 +52,10 @@ export const MyDetailsScreen: React.FC<Props> = ({ profile, onBack, onUpdateProf
   const [chequeUploaded, setChequeUploaded] = useState(false);
 
   const [activeUploadDoc, setActiveUploadDoc] = useState<"aadhaar" | "pan" | "cheque" | null>(null);
-  const [panNumberInput, setPanNumberInput] = useState("ABCDE1234F");
-  const [aadhaarInput, setAadhaarInput] = useState("4321");
-  const [bankAccInput, setBankAccInput] = useState("123456789012");
-  const [ifscInput, setIfscInput] = useState("HDFC0001234");
+  const [panNumberInput, setPanNumberInput] = useState("");
+  const [aadhaarInput, setAadhaarInput] = useState("");
+  const [bankAccInput, setBankAccInput] = useState("");
+  const [ifscInput, setIfscInput] = useState("");
 
   const maskedPhone = profile.user.phone
     ? profile.user.phone.replace(/(\+91\s?)?(\d{5})\d{2}(\d{3})/, "$2xx $3")
@@ -440,6 +440,8 @@ export const MyDetailsScreen: React.FC<Props> = ({ profile, onBack, onUpdateProf
                   style={styles.modalInput}
                   maxLength={10}
                   autoCapitalize="characters"
+                  placeholder="e.g. ABCDE1234F"
+                  placeholderTextColor={COLORS.textMuted}
                   value={panNumberInput}
                   onChangeText={setPanNumberInput}
                 />
@@ -453,6 +455,8 @@ export const MyDetailsScreen: React.FC<Props> = ({ profile, onBack, onUpdateProf
                   style={styles.modalInput}
                   maxLength={4}
                   keyboardType="number-pad"
+                  placeholder="e.g. 4321"
+                  placeholderTextColor={COLORS.textMuted}
                   value={aadhaarInput}
                   onChangeText={setAadhaarInput}
                 />
@@ -466,6 +470,8 @@ export const MyDetailsScreen: React.FC<Props> = ({ profile, onBack, onUpdateProf
                   <TextInput
                     style={styles.modalInput}
                     keyboardType="number-pad"
+                    placeholder="e.g. 123456789012"
+                    placeholderTextColor={COLORS.textMuted}
                     value={bankAccInput}
                     onChangeText={setBankAccInput}
                   />
@@ -475,6 +481,8 @@ export const MyDetailsScreen: React.FC<Props> = ({ profile, onBack, onUpdateProf
                   <TextInput
                     style={styles.modalInput}
                     autoCapitalize="characters"
+                    placeholder="e.g. HDFC0001234"
+                    placeholderTextColor={COLORS.textMuted}
                     value={ifscInput}
                     onChangeText={setIfscInput}
                   />

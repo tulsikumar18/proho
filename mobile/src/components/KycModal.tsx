@@ -19,11 +19,11 @@ interface Props {
 }
 
 export const KycModal: React.FC<Props> = ({ visible, onClose, onSubmit }) => {
-  const [pan, setPan] = useState("ABCDE1234F");
-  const [aadhaar, setAadhaar] = useState("4321");
-  const [rera, setRera] = useState("UPRERAAGT12345");
-  const [panUploaded, setPanUploaded] = useState(true);
-  const [addressUploaded, setAddressUploaded] = useState(true);
+  const [pan, setPan] = useState("");
+  const [aadhaar, setAadhaar] = useState("");
+  const [rera, setRera] = useState("");
+  const [panUploaded, setPanUploaded] = useState(false);
+  const [addressUploaded, setAddressUploaded] = useState(false);
 
   const handleSubmit = () => {
     if (pan.length !== 10) {
@@ -68,7 +68,7 @@ export const KycModal: React.FC<Props> = ({ visible, onClose, onSubmit }) => {
               <Text style={styles.label}>Permanent Account Number (PAN)</Text>
               <TextInput
                 style={styles.input}
-                placeholder="ABCDE1234F"
+                placeholder="e.g. ABCDE1234F"
                 placeholderTextColor={COLORS.textMuted}
                 autoCapitalize="characters"
                 maxLength={10}
@@ -95,7 +95,7 @@ export const KycModal: React.FC<Props> = ({ visible, onClose, onSubmit }) => {
               <Text style={styles.label}>Aadhaar Number (Last 4 Digits)</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Last 4 digits"
+                placeholder="e.g. 4321"
                 placeholderTextColor={COLORS.textMuted}
                 keyboardType="number-pad"
                 maxLength={4}
@@ -122,7 +122,7 @@ export const KycModal: React.FC<Props> = ({ visible, onClose, onSubmit }) => {
               <Text style={styles.label}>RERA Registration Number (Optional)</Text>
               <TextInput
                 style={styles.input}
-                placeholder="UPRERAAGTXXXXX"
+                placeholder="e.g. UPRERAAGT12345"
                 placeholderTextColor={COLORS.textMuted}
                 autoCapitalize="characters"
                 value={rera}

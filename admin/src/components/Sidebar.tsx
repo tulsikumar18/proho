@@ -8,6 +8,7 @@ import {
   Wallet,
   ScrollText,
 } from "lucide-react";
+import { AashrayoIcon } from "./AashrayoLogo";
 
 export type NavTab = "overview" | "kyc" | "properties" | "offers" | "visits" | "finance" | "audit";
 
@@ -36,7 +37,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, pendin
   return (
     <aside className="admin-sidebar">
       <div className="sidebar-header">
-        <div className="brand-badge">A</div>
+        <AashrayoIcon size={40} />
         <div className="brand-info">
           <h1>AASHRAYO</h1>
           <p>Admin Portal</p>

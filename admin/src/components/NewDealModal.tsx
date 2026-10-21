@@ -15,8 +15,8 @@ export const NewDealModal: React.FC<NewDealModalProps> = ({
   onSubmit,
 }) => {
   const [propertyId, setPropertyId] = useState(properties[0]?.id || "");
-  const [partnerName, setPartnerName] = useState("Amit Verma");
-  const [amount, setAmount] = useState("7500000");
+  const [partnerName, setPartnerName] = useState("");
+  const [amount, setAmount] = useState("");
 
   useEffect(() => {
     const prev = document.body.style.overflow;

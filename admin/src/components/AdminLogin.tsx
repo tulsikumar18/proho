@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import {
-  ShieldCheck,
   Lock,
   Mail,
   Phone,
   ArrowRight,
-  Sparkles,
   KeyRound,
   AlertCircle,
+  Eye,
+  EyeOff,
+  Sparkles,
 } from "lucide-react";
 import type { User } from "../types";
+import { AashrayoLogo } from "./AashrayoLogo";
 
 interface AdminLoginProps {
   onLoginSuccess: (user: User) => void;
@@ -17,10 +19,12 @@ interface AdminLoginProps {
 
 export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
   const [authMode, setAuthMode] = useState<"email" | "otp">("email");
-  const [email, setEmail] = useState("admin@aashrayo.in");
-  const [password, setPassword] = useState("Aashrayo@Admin2026");
-  const [phone, setPhone] = useState("+91 99999 99999");
-  const [otp, setOtp] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,8 +40,10 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      // Valid credentials
-      if (email.toLowerCase() === "admin@aashrayo.in" || email.includes("@")) {
+      if (
+        email.toLowerCase() === "admin@aashrayo.in" ||
+        (email.includes("@") && password.length >= 6)
+      ) {
         const verifiedAdmin: User = {
           id: "usr-admin-001",
           phone: "+91 99999 99999",
@@ -52,7 +58,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
         localStorage.setItem("aashrayo_admin_user", JSON.stringify(verifiedAdmin));
         onLoginSuccess(verifiedAdmin);
       } else {
-        setError("Invalid admin credentials. Please verify your email and password.");
+        setError("Invalid credentials. Please verify or use demo autofill below.");
       }
     }, 400);
   };
@@ -62,7 +68,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
     setError(null);
 
     if (!phone.trim() || otp.trim().length < 6) {
-      setError("Please enter your registered mobile number and 6-digit OTP.");
+      setError("Please enter your 10-digit mobile number and 6-digit OTP.");
       return;
     }
 
@@ -86,28 +92,35 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
   };
 
   const fillDemoCredentials = () => {
-    setEmail("admin@aashrayo.in");
-    setPassword("Aashrayo@Admin2026");
+    if (authMode === "email") {
+      setEmail("admin@aashrayo.in");
+      setPassword("Aashrayo@Admin2026");
+    } else {
+      setPhone("+91 99999 99999");
+      setOtp("123456");
+    }
     setError(null);
   };
 
   return (
     <div className="login-wrapper">
+      {/* Background Ambient Lighting */}
+      <div className="login-ambient-orb login-ambient-orb-1" />
+      <div className="login-ambient-orb login-ambient-orb-2" />
+      <div className="login-ambient-grid" />
+
       <div className="login-card">
-        {/* Brand Banner */}
+        {/* Clean Logo Header */}
         <div className="login-header">
-          <div className="login-brand-badge">A</div>
-          <h2>AASHRAYO</h2>
-          <p className="login-brand-sub">OPERATIONS & COMPLIANCE PORTAL</p>
+          <AashrayoLogo
+            size={52}
+            variant="stacked"
+            theme="light"
+            subtitle="ADMIN PORTAL"
+          />
         </div>
 
-        {/* Security Callout */}
-        <div className="security-notice">
-          <ShieldCheck size={18} color="#7c3aed" />
-          <span>Restricted Admin Portal · Verified Personnel Only</span>
-        </div>
-
-        {/* Tab Toggle */}
+        {/* Tab Switcher */}
         <div className="auth-tab-bar">
           <button
             type="button"
@@ -136,7 +149,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
         {/* Error Alert */}
         {error && (
           <div className="auth-error-box">
-            <AlertCircle size={16} />
+            <AlertCircle size={15} style={{ flexShrink: 0 }} />
             <span>{error}</span>
           </div>
         )}
@@ -144,56 +157,66 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
         {/* Email Form */}
         {authMode === "email" && (
           <form onSubmit={handleEmailLogin} className="auth-form">
-            <div className="form-group">
-              <label>Official Admin Email</label>
+            <div className="form-group" style={{ marginBottom: 16 }}>
+              <label>Official Email</label>
               <div className="input-with-icon">
-                <Mail size={18} className="input-icon" />
+                <Mail size={17} className="input-icon" />
                 <input
                   type="email"
                   className="form-control-app"
                   placeholder="admin@aashrayo.in"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
                   required
                 />
               </div>
             </div>
 
-            <div className="form-group">
+            <div className="form-group" style={{ marginBottom: 20 }}>
               <label>Password</label>
               <div className="input-with-icon">
-                <Lock size={18} className="input-icon" />
+                <Lock size={17} className="input-icon" />
                 <input
-                  type="password"
-                  className="form-control-app"
-                  placeholder="••••••••••••"
+                  type={showPassword ? "text" : "password"}
+                  className="form-control-app form-control-has-eye"
+                  placeholder="Enter security password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
                   required
                 />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             </div>
 
             <button type="submit" className="login-submit-btn" disabled={isLoading}>
               {isLoading ? (
-                <span>Authenticating...</span>
+                <span>Signing In...</span>
               ) : (
                 <>
-                  <span>Sign In as Operations Lead</span>
-                  <ArrowRight size={18} />
+                  <span>Sign In</span>
+                  <ArrowRight size={17} />
                 </>
               )}
             </button>
           </form>
         )}
 
-        {/* Phone OTP Form */}
+        {/* Mobile OTP Form */}
         {authMode === "otp" && (
           <form onSubmit={handleOtpLogin} className="auth-form">
-            <div className="form-group">
-              <label>Registered Mobile Number</label>
+            <div className="form-group" style={{ marginBottom: 16 }}>
+              <label>Registered Mobile</label>
               <div className="input-with-icon">
-                <Phone size={18} className="input-icon" />
+                <Phone size={17} className="input-icon" />
                 <input
                   type="tel"
                   className="form-control-app"
@@ -205,10 +228,10 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
               </div>
             </div>
 
-            <div className="form-group">
-              <label>6-Digit Verification Code</label>
+            <div className="form-group" style={{ marginBottom: 20 }}>
+              <label>6-Digit OTP</label>
               <div className="input-with-icon">
-                <KeyRound size={18} className="input-icon" />
+                <KeyRound size={17} className="input-icon" />
                 <input
                   type="text"
                   maxLength={6}
@@ -223,31 +246,33 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
 
             <button type="submit" className="login-submit-btn" disabled={isLoading}>
               {isLoading ? (
-                <span>Verifying OTP...</span>
+                <span>Verifying...</span>
               ) : (
                 <>
-                  <span>Verify & Access Dashboard</span>
-                  <ArrowRight size={18} />
+                  <span>Verify & Access</span>
+                  <ArrowRight size={17} />
                 </>
               )}
             </button>
           </form>
         )}
 
-        {/* Quick Demo Fill */}
-        <div className="demo-credentials-wrap">
+        {/* Discrete Demo Autofill Helper */}
+        <div className="demo-hint-row">
+          <span>Quick testing?</span>
           <button
             type="button"
-            className="demo-pill-btn"
+            className="demo-link-btn"
             onClick={fillDemoCredentials}
           >
-            <Sparkles size={14} color="#7c3aed" />
-            <span>Autofill Verified Admin Credentials</span>
+            <Sparkles size={13} />
+            <span>Autofill Demo Credentials</span>
           </button>
         </div>
 
+        {/* Minimal Clean Footer */}
         <div className="login-footer">
-          <p>© 2026 Aashrayo Real Estate Platform. All access is audited and monitored.</p>
+          <p>© 2026 Aashrayo · Secure Channel Partner Operations</p>
         </div>
       </div>
     </div>

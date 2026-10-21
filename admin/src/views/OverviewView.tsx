@@ -72,42 +72,40 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ stats, onNavigate })
           <h3>High-Priority Operational Actions</h3>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div className="action-cards-list">
           <div className="action-card-item">
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div className="action-card-main">
               <div className="kpi-icon-wrap amber" style={{ width: 44, height: 44 }}>
                 <Clock size={20} />
               </div>
-              <div>
-                <h4 style={{ fontSize: "14px", fontWeight: 700, color: "var(--text-main)" }}>
-                  Review Partner KYC Submissions
-                </h4>
-                <p style={{ fontSize: "12px", color: "var(--text-muted)", marginTop: 2 }}>
+              <div className="action-card-texts">
+                <h4>Review Partner KYC Submissions</h4>
+                <p>
                   {stats.pendingKyc} channel partner profiles require PAN, Aadhaar, and RERA document verification.
                 </p>
               </div>
             </div>
-            <button className="btn btn-primary btn-sm" onClick={() => onNavigate("kyc")}>
-              Open Queue <ArrowUpRight size={14} />
+            <button className="btn btn-primary action-card-btn" onClick={() => onNavigate("kyc")}>
+              <span>Open Queue</span>
+              <ArrowUpRight size={14} />
             </button>
           </div>
 
           <div className="action-card-item">
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div className="action-card-main">
               <div className="kpi-icon-wrap emerald" style={{ width: 44, height: 44 }}>
                 <CheckCircle2 size={20} />
               </div>
-              <div>
-                <h4 style={{ fontSize: "14px", fontWeight: 700, color: "var(--text-main)" }}>
-                  Payout Requests Waiting for Disbursement
-                </h4>
-                <p style={{ fontSize: "12px", color: "var(--text-muted)", marginTop: 2 }}>
+              <div className="action-card-texts">
+                <h4>Payout Requests Waiting for Disbursement</h4>
+                <p>
                   {stats.pendingPayouts} approved partner withdrawals require bank UTR transaction references.
                 </p>
               </div>
             </div>
-            <button className="btn btn-primary btn-sm" onClick={() => onNavigate("finance")}>
-              Review Payouts <ArrowUpRight size={14} />
+            <button className="btn btn-primary action-card-btn" onClick={() => onNavigate("finance")}>
+              <span>Review Payouts</span>
+              <ArrowUpRight size={14} />
             </button>
           </div>
         </div>

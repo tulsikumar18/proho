@@ -9,14 +9,15 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { COLORS } from "../constants/theme";
+import { AashrayoLogo } from "../components/AashrayoLogo";
 
 interface Props {
   onContinue: (firstName: string, lastName: string) => void;
 }
 
 export const NameSetupScreen: React.FC<Props> = ({ onContinue }) => {
-  const [firstName, setFirstName] = useState("Kritaank");
-  const [lastName, setLastName] = useState("Krishna");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   const handleContinue = () => {
     if (firstName.trim()) {
@@ -28,13 +29,10 @@ export const NameSetupScreen: React.FC<Props> = ({ onContinue }) => {
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
       <View style={styles.content}>
-        {/* App Logo */}
-        <View style={styles.logoBadge}>
-          <View style={styles.logoRoof} />
-          <View style={styles.logoBase} />
-          <Text style={styles.logoText}>AASHRAYO</Text>
+        {/* Modern App Logo */}
+        <View style={{ alignItems: "center", marginBottom: 28 }}>
+          <AashrayoLogo size={56} variant="stacked" subtitle="Channel Partner App" />
         </View>
-        <Text style={styles.subBrand}>Channel Partner App</Text>
 
         <Text style={styles.heading}>What's your name?</Text>
         <Text style={styles.subtitle}>So we can personalize your experience</Text>
@@ -44,7 +42,7 @@ export const NameSetupScreen: React.FC<Props> = ({ onContinue }) => {
           <Text style={styles.label}>First Name</Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter first name"
+            placeholder="e.g. Kritaank"
             placeholderTextColor={COLORS.textMuted}
             value={firstName}
             onChangeText={setFirstName}
@@ -55,7 +53,7 @@ export const NameSetupScreen: React.FC<Props> = ({ onContinue }) => {
           <Text style={styles.label}>Last Name (Optional)</Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter last name"
+            placeholder="e.g. Krishna"
             placeholderTextColor={COLORS.textMuted}
             value={lastName}
             onChangeText={setLastName}

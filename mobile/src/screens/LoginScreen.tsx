@@ -13,13 +13,14 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { COLORS } from "../constants/theme";
+import { AashrayoLogo } from "../components/AashrayoLogo";
 
 interface Props {
   onSuccessLogin: (phone: string) => void;
 }
 
 export const LoginScreen: React.FC<Props> = ({ onSuccessLogin }) => {
-  const [phoneNumber, setPhoneNumber] = useState("9876543210");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [otpStep, setOtpStep] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<Array<TextInput | null>>([]);
@@ -84,13 +85,10 @@ export const LoginScreen: React.FC<Props> = ({ onSuccessLogin }) => {
         style={{ flex: 1 }}
       >
         <View style={styles.content}>
-          {/* Logo Badge */}
-          <View style={styles.logoBadge}>
-            <View style={styles.logoRoof} />
-            <View style={styles.logoBase} />
-            <Text style={styles.logoText}>AASHRAYO</Text>
+          {/* Modern AASHRAYO Logo */}
+          <View style={{ alignItems: "center", marginBottom: 28 }}>
+            <AashrayoLogo size={60} variant="stacked" subtitle="Channel Partner App" />
           </View>
-          <Text style={styles.subBrand}>Channel Partner App</Text>
 
           {!otpStep ? (
             <>
@@ -109,7 +107,7 @@ export const LoginScreen: React.FC<Props> = ({ onSuccessLogin }) => {
                     style={styles.numberInput}
                     keyboardType="phone-pad"
                     maxLength={10}
-                    placeholder="Enter phone number"
+                    placeholder="e.g. 9876543210"
                     placeholderTextColor={COLORS.textMuted}
                     value={phoneNumber}
                     onChangeText={setPhoneNumber}

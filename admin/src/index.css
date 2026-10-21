@@ -412,6 +412,78 @@ body {
 }
 
 /* ==========================================================================
+   High-Priority Operational Actions Cards
+   ========================================================================== */
+.action-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.action-card-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 24px;
+  background: #ffffff;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.action-card-item:hover {
+  background: #fbfbfe;
+  border-color: #cbd5e1;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.action-card-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.action-card-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.action-card-texts h4 {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.action-card-texts p {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.action-card-btn {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px !important;
+  border-radius: var(--radius-full) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
+}
+
+/* ==========================================================================
    Content Panels & Tables (App Surface Card Style)
    ========================================================================== */
 .glass-panel {
@@ -1119,24 +1191,65 @@ body {
 }
 
 /* ==========================================================================
-   Admin Authentication Screen (Matching Mobile App Aesthetic)
+   Admin Authentication Screen (Modern High-End Aashrayo Design)
    ========================================================================== */
 .login-wrapper {
   min-height: 100vh;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #130a2a 0%, #2e1065 50%, #3b0764 100%);
-  padding: 20px;
+  background: radial-gradient(circle at 50% 20%, #2e1065 0%, #130a2a 55%, #070314 100%);
+  padding: 32px 20px;
+  overflow: hidden;
+}
+
+.login-ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(100px);
+}
+
+.login-ambient-orb-1 {
+  width: 500px;
+  height: 500px;
+  background: rgba(124, 58, 237, 0.28);
+  top: -120px;
+  left: 20%;
+}
+
+.login-ambient-orb-2 {
+  width: 440px;
+  height: 440px;
+  background: rgba(67, 24, 255, 0.22);
+  bottom: -80px;
+  right: 20%;
+}
+
+.login-ambient-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+  opacity: 0.7;
 }
 
 .login-card {
+  position: relative;
+  z-index: 10;
   background: #ffffff;
-  border-radius: var(--radius-xl);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  box-shadow: 
+    0 20px 50px -10px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
   width: 100%;
-  max-width: 460px;
-  padding: 36px 32px;
+  max-width: 420px;
+  padding: 32px 30px 24px;
 }
 
 .login-header {
@@ -1144,58 +1257,13 @@ body {
   margin-bottom: 20px;
 }
 
-.login-brand-badge {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #7c3aed, #4f46e5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 900;
-  margin: 0 auto 12px auto;
-  box-shadow: 0 8px 16px rgba(124, 58, 237, 0.35);
-}
-
-.login-header h2 {
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--text-main);
-  letter-spacing: -0.02em;
-}
-
-.login-brand-sub {
-  font-size: 11px;
-  font-weight: 700;
-  color: #7c3aed;
-  letter-spacing: 0.1em;
-  margin-top: 2px;
-}
-
-.security-notice {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #faf5ff;
-  border: 1px solid #ede9fe;
-  padding: 8px 12px;
-  border-radius: var(--radius-md);
-  margin-bottom: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #6b21a8;
-}
-
 .auth-tab-bar {
   display: flex;
   background: #f1f5f9;
-  padding: 4px;
+  padding: 3px;
   border-radius: var(--radius-md);
-  margin-bottom: 20px;
+  margin-bottom: 18px;
+  border: 1px solid var(--border-subtle);
 }
 
 .auth-tab-btn {
@@ -1208,7 +1276,7 @@ body {
   border-radius: var(--radius-sm);
   border: none;
   background: transparent;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
@@ -1219,7 +1287,7 @@ body {
   background: #ffffff;
   color: var(--primary-light);
   font-weight: 700;
-  box-shadow: var(--shadow-xs);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .auth-error-box {
@@ -1229,7 +1297,7 @@ body {
   background: #fee2e2;
   border: 1px solid #fecaca;
   color: #b91c1c;
-  padding: 10px 12px;
+  padding: 9px 12px;
   border-radius: var(--radius-md);
   font-size: 12px;
   font-weight: 600;
@@ -1240,11 +1308,12 @@ body {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .input-icon {
   position: absolute;
-  left: 12px;
+  left: 13px;
   color: #94a3b8;
   pointer-events: none;
 }
@@ -1256,20 +1325,41 @@ body {
   border: 1.5px solid var(--border-subtle);
   border-radius: var(--radius-md);
   color: var(--text-main);
-  font-size: 14px;
+  font-size: 13.5px;
   outline: none;
-  transition: border-color var(--transition-fast);
+  transition: all var(--transition-fast);
+}
+
+.form-control-has-eye {
+  padding-right: 44px !important;
 }
 
 .form-control-app:focus {
   border-color: var(--primary-light);
   background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
 }
 
-textarea.form-control-app {
-  padding: 10px 14px;
-  min-height: 80px;
-  resize: vertical;
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast);
+}
+
+.password-toggle-btn:hover {
+  color: var(--text-main);
 }
 
 .login-submit-btn {
@@ -1278,56 +1368,63 @@ textarea.form-control-app {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
   color: #ffffff;
-  padding: 13px 20px;
+  padding: 12px 20px;
   border-radius: var(--radius-md);
   border: none;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
   transition: all var(--transition-fast);
-  margin-top: 18px;
 }
 
 .login-submit-btn:hover {
-  background: linear-gradient(135deg, #6d28d9, #5b21b6);
+  background: linear-gradient(135deg, #6d28d9, #4f46e5);
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.45);
   transform: translateY(-1px);
 }
 
-.demo-credentials-wrap {
-  margin-top: 18px;
-  text-align: center;
+.demo-hint-row {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
-.demo-pill-btn {
-  background: #faf5ff;
-  border: 1px dashed #c084fc;
-  padding: 7px 14px;
-  border-radius: var(--radius-full);
+.demo-link-btn {
+  background: none;
+  border: none;
+  color: var(--primary-light);
   font-size: 12px;
   font-weight: 600;
-  color: #7c3aed;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  transition: all var(--transition-fast);
+  gap: 4px;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--transition-fast);
 }
 
-.demo-pill-btn:hover {
-  background: #f3e8ff;
+.demo-link-btn:hover {
+  color: #4f46e5;
 }
 
 .login-footer {
   text-align: center;
-  margin-top: 24px;
-  padding-top: 16px;
+  margin-top: 20px;
+  padding-top: 14px;
   border-top: 1px solid var(--border-subtle);
 }
 
 .login-footer p {
   font-size: 11px;
   color: var(--text-muted);
+  margin: 0;
 }
