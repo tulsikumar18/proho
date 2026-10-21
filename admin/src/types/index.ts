@@ -31,11 +31,27 @@ export interface KycSubmission {
   partner_id: string;
   partner_name: string;
   partner_phone: string;
+  partner_email?: string;
+  profile_type?: "Individual" | "Firm" | "Company";
+  base_location?: string;
+  work_areas?: string[];
+  partner_since?: string;
   agency_name?: string;
   pan_number: string;
   pan_document_url?: string;
+  pan_photo_url?: string;
+  aadhaar_number?: string;
   aadhaar_last_four: string;
   address_document_url?: string;
+  aadhaar_front_url?: string;
+  aadhaar_back_url?: string;
+  // Bank details
+  bank_name?: string;
+  bank_account_holder?: string;
+  bank_account_number?: string;
+  bank_ifsc?: string;
+  bank_branch?: string;
+  cheque_photo_url?: string;
   rera_number?: string;
   rera_document_url?: string;
   status: KycStatus;

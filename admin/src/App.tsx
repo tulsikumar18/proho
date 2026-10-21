@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Sidebar, type NavTab } from "./components/Sidebar";
 import { Header } from "./components/Header";
+import { AdminLogin } from "./components/AdminLogin";
 import { OverviewView } from "./views/OverviewView";
 import { KycView } from "./views/KycView";
 import { PropertiesView } from "./views/PropertiesView";
@@ -11,11 +12,20 @@ import { AuditLogsView } from "./views/AuditLogsView";
 import { adminStore } from "./services/api";
 
 export function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return !!localStorage.getItem("aashrayo_admin_token");
+  });
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem("aashrayo_admin_user");
+      return saved ? JSON.parse(saved) : adminStore.getUser();
+    } catch {
+      return adminStore.getUser();
+    }
+  });
+
   const [activeTab, setActiveTab] = useState<NavTab>("overview");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  // Load state from admin data store
-  const [currentUser] = useState(adminStore.getUser());
   const [kycList, setKycList] = useState(adminStore.getKycSubmissions());
   const [propertyList, setPropertyList] = useState(adminStore.getProperties());
   const [offerList, setOfferList] = useState(adminStore.getOffers());
@@ -155,6 +165,25 @@ export function App() {
     audit: "System Audit Trail & Compliance Records",
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("aashrayo_admin_token");
+    localStorage.removeItem("aashrayo_admin_user");
+    setIsAuthenticated(false);
+    notify("Signed out from Admin Portal.");
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <AdminLogin
+        onLoginSuccess={(user) => {
+          setCurrentUser(user);
+          setIsAuthenticated(true);
+          notify(`Welcome back, ${user.full_name}`);
+        }}
+      />
+    );
+  }
+
   return (
     <div className="admin-layout">
       {/* Toast Notification */}
@@ -165,12 +194,12 @@ export function App() {
             bottom: 24,
             right: 24,
             background: "linear-gradient(135deg, #1e293b, #0f172a)",
-            border: "1px solid var(--accent-primary)",
-            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.6)",
+            border: "1px solid var(--border-focus)",
+            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.4)",
             color: "#f8fafc",
             padding: "12px 20px",
             borderRadius: "var(--radius-md)",
-            zIndex: 9999,
+            zIndex: 99999,
             display: "flex",
             alignItems: "center",
             gap: 10,
@@ -192,7 +221,7 @@ export function App() {
 
       {/* Main Application Area */}
       <div className="admin-main">
-        <Header user={currentUser} activeTabTitle={tabTitles[activeTab]} />
+        <Header user={currentUser} activeTabTitle={tabTitles[activeTab]} onLogout={handleLogout} />
 
         <main className="admin-content">
           {activeTab === "overview" && (

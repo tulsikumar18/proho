@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { CheckCircle2, X } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { CheckCircle2, X, Handshake } from "lucide-react";
 import type { Property } from "../types";
 
 interface NewDealModalProps {
@@ -17,6 +18,14 @@ export const NewDealModal: React.FC<NewDealModalProps> = ({
   const [partnerName, setPartnerName] = useState("Amit Verma");
   const [amount, setAmount] = useState("7500000");
 
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
   const agreementNum = parseFloat(amount) || 0;
   const grossComm = agreementNum * 0.02; // 2%
   const tds = grossComm * 0.05; // 5%
@@ -32,12 +41,20 @@ export const NewDealModal: React.FC<NewDealModalProps> = ({
     onClose();
   };
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3>Record & Close Property Deal</h3>
-          <button className="btn btn-secondary btn-sm" onClick={onClose}>
+          <div className="modal-title-group">
+            <div className="modal-badge-icon" style={{ background: "var(--primary-soft)", color: "var(--primary-light)" }}>
+              <Handshake size={18} />
+            </div>
+            <div>
+              <h3>Record & Close Property Deal</h3>
+              <p className="modal-subtitle">Generate regulatory brokerage invoice with Sec. 194H TDS</p>
+            </div>
+          </div>
+          <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">
             <X size={16} />
           </button>
         </div>
@@ -59,7 +76,7 @@ export const NewDealModal: React.FC<NewDealModalProps> = ({
               </select>
             </div>
 
-            <div className="form-group">
+            <div className="form-group" style={{ marginTop: 12 }}>
               <label>Referring Channel Partner</label>
               <input
                 type="text"
@@ -70,7 +87,7 @@ export const NewDealModal: React.FC<NewDealModalProps> = ({
               />
             </div>
 
-            <div className="form-group">
+            <div className="form-group" style={{ marginTop: 12 }}>
               <label>Final Agreement Value (INR)</label>
               <input
                 type="number"
@@ -81,18 +98,18 @@ export const NewDealModal: React.FC<NewDealModalProps> = ({
               />
             </div>
 
-            <div className="info-box" style={{ marginTop: 20 }}>
+            <div className="info-box" style={{ marginTop: 16 }}>
               <div className="info-item">
                 <span>Standard Brokerage (2%)</span>
                 <p>₹{grossComm.toLocaleString("en-IN")}</p>
               </div>
               <div className="info-item">
                 <span>Sec. 194H TDS (5%)</span>
-                <p style={{ color: "var(--accent-amber)" }}>- ₹{tds.toLocaleString("en-IN")}</p>
+                <p style={{ color: "var(--accent-amber-text)" }}>- ₹{tds.toLocaleString("en-IN")}</p>
               </div>
               <div className="info-item" style={{ gridColumn: "span 2" }}>
                 <span>Net Payable Credit to Partner Ledger</span>
-                <p style={{ color: "var(--accent-emerald)", fontSize: "16px" }}>
+                <p style={{ color: "var(--accent-emerald-text)", fontSize: "16px", fontWeight: 700 }}>
                   ₹{net.toLocaleString("en-IN")}
                 </p>
               </div>
@@ -109,6 +126,7 @@ export const NewDealModal: React.FC<NewDealModalProps> = ({
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

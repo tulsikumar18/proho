@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { CheckCircle2, X, XCircle, Archive } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { CheckCircle2, X, XCircle, Archive, Building2, MapPin } from "lucide-react";
 import type { Property } from "../types";
 
 interface PropertyReviewModalProps {
@@ -20,6 +21,14 @@ export const PropertyReviewModal: React.FC<PropertyReviewModalProps> = ({
   const [rejectionReason, setRejectionReason] = useState("");
   const [showRejectForm, setShowRejectForm] = useState(false);
 
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
   const formatPrice = (val: string) => {
     const num = parseFloat(val);
     if (isNaN(num)) return val;
@@ -37,12 +46,20 @@ export const PropertyReviewModal: React.FC<PropertyReviewModalProps> = ({
     onClose();
   };
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3>Property Listing Evaluation</h3>
-          <button className="btn btn-secondary btn-sm" onClick={onClose}>
+          <div className="modal-title-group">
+            <div className="modal-badge-icon" style={{ background: "var(--accent-blue-bg)", color: "var(--accent-blue-text)" }}>
+              <Building2 size={18} />
+            </div>
+            <div>
+              <h3>Property Listing Evaluation</h3>
+              <p className="modal-subtitle">Verify unit specs, ownership NOC & market valuation</p>
+            </div>
+          </div>
+          <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">
             <X size={16} />
           </button>
         </div>
@@ -51,7 +68,10 @@ export const PropertyReviewModal: React.FC<PropertyReviewModalProps> = ({
           <div className="info-box">
             <div className="info-item">
               <span>Society / Project</span>
-              <p>{property.society_name}</p>
+              <p style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <MapPin size={13} color="var(--primary-light)" />
+                {property.society_name}
+              </p>
             </div>
             <div className="info-item">
               <span>Tower & Unit</span>
@@ -63,7 +83,7 @@ export const PropertyReviewModal: React.FC<PropertyReviewModalProps> = ({
             </div>
             <div className="info-item">
               <span>Asking Price</span>
-              <p style={{ color: "var(--accent-emerald)" }}>{formatPrice(property.price)}</p>
+              <p style={{ color: "var(--accent-emerald-text)", fontWeight: 700 }}>{formatPrice(property.price)}</p>
             </div>
             <div className="info-item">
               <span>Rate per Sq.Ft</span>
@@ -84,13 +104,15 @@ export const PropertyReviewModal: React.FC<PropertyReviewModalProps> = ({
           </div>
 
           {showRejectForm ? (
-            <div className="form-group">
+            <div className="form-group" style={{ marginTop: 16 }}>
               <label>Rejection Justification</label>
               <textarea
                 className="form-control"
                 placeholder="State reason for rejecting listing (e.g. Price too high compared to market comps, missing seller NOC)..."
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
+                rows={3}
+                autoFocus
               />
             </div>
           ) : null}
@@ -117,7 +139,7 @@ export const PropertyReviewModal: React.FC<PropertyReviewModalProps> = ({
               >
                 <Archive size={16} /> Archive
               </button>
-              <button className="btn btn-danger" onClick={() => setShowRejectForm(true)}>
+              <button className="btn btn-danger-outline" onClick={() => setShowRejectForm(true)}>
                 <XCircle size={16} /> Reject
               </button>
               <button
@@ -133,6 +155,7 @@ export const PropertyReviewModal: React.FC<PropertyReviewModalProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

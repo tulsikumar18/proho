@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { CheckCircle2, X } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { CheckCircle2, X, Wallet } from "lucide-react";
 import type { PayoutRequest } from "../types";
 
 interface PayoutDisburseModalProps {
@@ -14,6 +15,14 @@ export const PayoutDisburseModal: React.FC<PayoutDisburseModalProps> = ({
   onDisburse,
 }) => {
   const [utrReference, setUtrReference] = useState("");
+
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
 
   const formatPrice = (val: string) => {
     const num = parseFloat(val);
@@ -30,12 +39,20 @@ export const PayoutDisburseModal: React.FC<PayoutDisburseModalProps> = ({
     onClose();
   };
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3>Confirm Payout Disbursement</h3>
-          <button className="btn btn-secondary btn-sm" onClick={onClose}>
+          <div className="modal-title-group">
+            <div className="modal-badge-icon" style={{ background: "var(--accent-emerald-bg)", color: "var(--accent-emerald-text)" }}>
+              <Wallet size={18} />
+            </div>
+            <div>
+              <h3>Confirm Payout Disbursement</h3>
+              <p className="modal-subtitle">Record banking remittance and ledger journal entry</p>
+            </div>
+          </div>
+          <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">
             <X size={16} />
           </button>
         </div>
@@ -64,11 +81,13 @@ export const PayoutDisburseModal: React.FC<PayoutDisburseModalProps> = ({
             </div>
             <div className="info-item">
               <span>Payout Amount</span>
-              <p style={{ color: "var(--accent-emerald)", fontSize: "16px" }}>{formatPrice(payout.amount)}</p>
+              <p style={{ color: "var(--accent-emerald-text)", fontSize: "16px", fontWeight: 700 }}>
+                {formatPrice(payout.amount)}
+              </p>
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="form-group" style={{ marginTop: 14 }}>
             <label>
               Bank Transaction Reference / UTR Number <span style={{ color: "var(--accent-rose)" }}>*</span>
             </label>
@@ -78,6 +97,7 @@ export const PayoutDisburseModal: React.FC<PayoutDisburseModalProps> = ({
               placeholder="e.g. HDFCN20261021998822"
               value={utrReference}
               onChange={(e) => setUtrReference(e.target.value)}
+              autoFocus
             />
             <small style={{ color: "var(--text-muted)", fontSize: "11px", marginTop: 4, display: "block" }}>
               Double-entry debit will be atomically booked to partner ledger upon confirmation.
@@ -94,6 +114,7 @@ export const PayoutDisburseModal: React.FC<PayoutDisburseModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

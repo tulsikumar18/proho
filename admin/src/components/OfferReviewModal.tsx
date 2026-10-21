@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { CheckCircle2, X, XCircle, ArrowLeftRight } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { CheckCircle2, X, XCircle, ArrowLeftRight, Tag } from "lucide-react";
 import type { Offer } from "../types";
 
 interface OfferReviewModalProps {
@@ -21,6 +22,14 @@ export const OfferReviewModal: React.FC<OfferReviewModalProps> = ({
   const [rejectionReason, setRejectionReason] = useState("");
   const [counterAmount, setCounterAmount] = useState("");
   const [counterNotes, setCounterNotes] = useState("");
+
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
 
   const formatPrice = (val: string) => {
     const num = parseFloat(val);
@@ -46,12 +55,20 @@ export const OfferReviewModal: React.FC<OfferReviewModalProps> = ({
     onClose();
   };
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3>Offer Review & Negotiation</h3>
-          <button className="btn btn-secondary btn-sm" onClick={onClose}>
+          <div className="modal-title-group">
+            <div className="modal-badge-icon" style={{ background: "var(--primary-soft)", color: "var(--primary-light)" }}>
+              <Tag size={18} />
+            </div>
+            <div>
+              <h3>Offer Review & Negotiation</h3>
+              <p className="modal-subtitle">Evaluate buyer purchase bid, issue counterterms or accept</p>
+            </div>
+          </div>
+          <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">
             <X size={16} />
           </button>
         </div>
@@ -72,31 +89,35 @@ export const OfferReviewModal: React.FC<OfferReviewModalProps> = ({
             </div>
             <div className="info-item">
               <span>Offer Amount</span>
-              <p style={{ color: "var(--accent-emerald)", fontSize: "16px" }}>{formatPrice(offer.offer_amount)}</p>
+              <p style={{ color: "var(--accent-emerald-text)", fontSize: "16px", fontWeight: 700 }}>
+                {formatPrice(offer.offer_amount)}
+              </p>
             </div>
           </div>
 
           {offer.notes && (
-            <div style={{ marginBottom: 16, padding: 12, background: "rgba(255,255,255,0.02)", borderRadius: 8 }}>
-              <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>Buyer Notes / Conditions:</span>
+            <div style={{ marginBottom: 16, padding: 14, background: "#f8fafc", borderRadius: 8, border: "1px solid var(--border-subtle)" }}>
+              <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--text-muted)" }}>Buyer Notes / Conditions:</span>
               <p style={{ fontSize: "13px", color: "var(--text-secondary)", marginTop: 4 }}>{offer.notes}</p>
             </div>
           )}
 
           {mode === "reject" && (
-            <div className="form-group">
+            <div className="form-group" style={{ marginTop: 12 }}>
               <label>Rejection Reason</label>
               <textarea
                 className="form-control"
                 placeholder="State why the offer was rejected..."
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
+                rows={3}
+                autoFocus
               />
             </div>
           )}
 
           {mode === "counter" && (
-            <>
+            <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 12 }}>
               <div className="form-group">
                 <label>Counteroffer Price (INR)</label>
                 <input
@@ -105,6 +126,7 @@ export const OfferReviewModal: React.FC<OfferReviewModalProps> = ({
                   placeholder="e.g. 7200000"
                   value={counterAmount}
                   onChange={(e) => setCounterAmount(e.target.value)}
+                  autoFocus
                 />
               </div>
               <div className="form-group">
@@ -114,9 +136,10 @@ export const OfferReviewModal: React.FC<OfferReviewModalProps> = ({
                   placeholder="e.g. Price includes modular kitchen fittings and 1 covered parking..."
                   value={counterNotes}
                   onChange={(e) => setCounterNotes(e.target.value)}
+                  rows={2}
                 />
               </div>
-            </>
+            </div>
           )}
         </div>
 
@@ -141,7 +164,7 @@ export const OfferReviewModal: React.FC<OfferReviewModalProps> = ({
               <button className="btn btn-secondary" onClick={() => setMode("counter")}>
                 <ArrowLeftRight size={16} /> Counter
               </button>
-              <button className="btn btn-danger" onClick={() => setMode("reject")}>
+              <button className="btn btn-danger-outline" onClick={() => setMode("reject")}>
                 <XCircle size={16} /> Reject
               </button>
               <button
@@ -157,6 +180,7 @@ export const OfferReviewModal: React.FC<OfferReviewModalProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
