@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [Phase 6] - 2026-10-21
+### Added
+- **Admin Web Dashboard (React 19 + TypeScript + Vite)**:
+  - High-performance, responsive admin portal in `admin/` built with React 19, TypeScript 5.8, and Vite.
+  - Bespoke Vanilla CSS design system (`admin/src/index.css`) featuring modern dark theme, glassmorphic cards, responsive KPI grids, accessible form controls, modals, and status badges (zero TailwindCSS dependency).
+  - Clean modular architecture:
+    - **Overview Module (`OverviewView`)**: Operations KPI summary cards for pending KYC, properties under review, active offers/negotiations, and pending payouts, with priority action shortcuts.
+    - **Partner KYC Queue (`KycView` & `KycModal`)**: Filterable verification queue for PAN, Aadhaar (last 4), and RERA documents, featuring document inspection links, one-click approval, and mandatory rejection justification notes.
+    - **Property Inventory Curation (`PropertiesView` & `PropertyReviewModal`)**: Sourced resale listings vs. Proho verified selling inventory, unit specifications, floor numbers, carpet/super areas, pricing analytics, and administrative approval, rejection, or archiving workflows.
+    - **Offers & Negotiations Queue (`OffersView` & `OfferReviewModal`)**: Supervise formal buyer purchase offers, inspect counteroffer chains, and issue structured counteroffers with updated price terms and negotiation notes.
+    - **Site Visits & Door Access (`VisitsView`)**: Calendar overview of scheduled property visits, field representative attribution, door OTP status monitoring, and visit cancellation with mandatory client rescheduling notes.
+    - **Commissions & Finance Hub (`FinanceView`, `PayoutDisburseModal`, `NewDealModal`)**:
+      - Partner payout request queue with masked bank account and IFSC verification.
+      - Disbursement workflow requiring bank UTR transaction references with instant audit trail.
+      - Deal recording and closure modal calculating 2% gross commission and automated 5% Section 194H TDS withholding with tax invoice generation (`PROHO/YYYY-YY/XXXX`).
+    - **System Audit Trail (`AuditLogsView`)**: Append-only compliance log table recording every administrative action, actor, timestamp, IP address, target model, and sanitized JSON metadata snapshot.
+  - State store (`adminStore`) in `admin/src/services/api.ts` providing operational reactive state and offline/fallback mock data for seamless testing and demonstration.
+  - Production build passing cleanly via `tsc -b && vite build` (zero type errors, 284kB bundle).
+
 ## [Phase 5] - 2026-10-21
 ### Added
 - `apps.finance` application for commission calculations, double-entry immutable ledger, tax invoices, and payout processing:
