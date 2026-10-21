@@ -106,7 +106,7 @@ export const sampleProperties: PropertyItem[] = [
 export const sampleInvoices: InvoiceItem[] = [
   {
     id: "inv-001",
-    invoice_number: "PROHO/2026-27/0014",
+    invoice_number: "AASHRAYO/2026-27/0014",
     property_title: "ACE Divino - Unit 4-2101",
     deal_value: "₹1,78,00,000",
     gross_commission: "₹3,56,000",
@@ -130,3 +130,49 @@ export const sampleVisits: ScheduledVisit[] = [
     otp_status: "PENDING",
   },
 ];
+
+export const submitKycToAdmin = async (submission: {
+  partner_name: string;
+  partner_phone: string;
+  pan_number: string;
+  aadhaar_last_four: string;
+  bank_account?: string;
+  agency_name?: string;
+}) => {
+  const newSubmission = {
+    id: `kyc-${Date.now().toString().slice(-4)}`,
+    partner_id: "prt-kritaank",
+    partner_name: submission.partner_name,
+    partner_phone: submission.partner_phone,
+    agency_name: submission.agency_name || "Individual",
+    pan_number: submission.pan_number,
+    pan_document_url: "https://proho-storage.s3.ap-southeast-2.amazonaws.com/kyc/pan_sample1.pdf",
+    aadhaar_last_four: submission.aadhaar_last_four,
+    address_document_url: "https://proho-storage.s3.ap-southeast-2.amazonaws.com/kyc/address_sample1.pdf",
+    status: "PENDING",
+    created_at: new Date().toISOString(),
+  };
+
+  if (typeof window !== "undefined" && window.localStorage) {
+    try {
+      const existing = JSON.parse(window.localStorage.getItem("aashrayo_kyc_list") || "[]");
+      const filtered = existing.filter((item: any) => item.partner_id !== "prt-kritaank");
+      filtered.unshift(newSubmission);
+      window.localStorage.setItem("aashrayo_kyc_list", JSON.stringify(filtered));
+    } catch (e) {}
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("pan_number", submission.pan_number);
+    formData.append("aadhaar_last_four", submission.aadhaar_last_four);
+    await fetch("http://localhost:8000/api/v1/partner/kyc/", {
+      method: "POST",
+      body: formData,
+    });
+  } catch (err) {
+    // Graceful offline fallback
+  }
+
+  return newSubmission;
+};

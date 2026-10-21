@@ -5,9 +5,9 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import {
   FileText,
@@ -26,6 +26,7 @@ import { SupportFab } from "../../components/SupportFab";
 
 interface Props {
   profile: PartnerProfile;
+  onOpenMyDetails?: () => void;
   onOpenKycModal: () => void;
   onOpenInvoicesModal: () => void;
   onOpenCpPolicy: () => void;
@@ -37,6 +38,7 @@ interface Props {
 
 export const MoreScreen: React.FC<Props> = ({
   profile,
+  onOpenMyDetails,
   onOpenKycModal,
   onOpenInvoicesModal,
   onOpenCpPolicy,
@@ -56,7 +58,11 @@ export const MoreScreen: React.FC<Props> = ({
       <StatusBar style="light" />
 
       {/* Header Profile Bar */}
-      <View style={styles.header}>
+      <TouchableOpacity
+        style={styles.header}
+        activeOpacity={0.8}
+        onPress={onOpenMyDetails}
+      >
         <View style={styles.avatarCircle}>
           <Text style={styles.avatarInitials}>{getInitials()}</Text>
         </View>
@@ -66,7 +72,7 @@ export const MoreScreen: React.FC<Props> = ({
             {profile.user.phone ? profile.user.phone.replace(/(\+91\s\d{2})\d{4}(\d{4})/, "$1××××$2") : "+91 80××××6342"}
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -133,7 +139,7 @@ export const MoreScreen: React.FC<Props> = ({
           <TouchableOpacity
             style={[styles.menuItem, { borderBottomWidth: 0 }]}
             activeOpacity={0.8}
-            onPress={onOpenKycModal}
+            onPress={onOpenMyDetails || onOpenKycModal}
           >
             <View style={styles.menuItemLeft}>
               <View style={[styles.menuIconWrap, { backgroundColor: "#faf5ff" }]}>
@@ -201,7 +207,7 @@ export const MoreScreen: React.FC<Props> = ({
             onPress={() =>
               Alert.alert(
                 "Help & FAQ",
-                "• Call Support: 9:00 AM - 8:00 PM\n• WhatsApp Support: +91 9999 123 456\n• Email: partners@proho.in"
+                "• Call Support: 9:00 AM - 8:00 PM\n• WhatsApp Support: +91 9999 123 456\n• Email: partners@aashrayo.in"
               )
             }
           >

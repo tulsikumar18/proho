@@ -5,12 +5,12 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { COLORS } from "../constants/theme";
 
@@ -88,7 +88,7 @@ export const LoginScreen: React.FC<Props> = ({ onSuccessLogin }) => {
           <View style={styles.logoBadge}>
             <View style={styles.logoRoof} />
             <View style={styles.logoBase} />
-            <Text style={styles.logoText}>PROHO</Text>
+            <Text style={styles.logoText}>AASHRAYO</Text>
           </View>
           <Text style={styles.subBrand}>Channel Partner App</Text>
 
@@ -179,7 +179,7 @@ export const LoginScreen: React.FC<Props> = ({ onSuccessLogin }) => {
         {/* Footer Disclaimer */}
         <View style={styles.footer}>
           <Text style={styles.disclaimerText}>
-            By continuing you agree to Proho's{" "}
+            By continuing you agree to Aashrayo's{" "}
             <Text style={styles.disclaimerLink}>Terms</Text> &{" "}
             <Text style={styles.disclaimerLink}>Privacy Policy</Text>.
           </Text>

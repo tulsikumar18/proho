@@ -4,8 +4,8 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Check, ChevronRight } from "lucide-react-native";
 import { COLORS } from "../constants/theme";
@@ -31,7 +31,7 @@ export const LanguageSelectScreen: React.FC<Props> = ({
           <View style={styles.logoBadge}>
             <View style={styles.logoRoof} />
             <View style={styles.logoBase} />
-            <Text style={styles.logoText}>PROHO</Text>
+            <Text style={styles.logoText}>AASHRAYO</Text>
           </View>
         </View>
 

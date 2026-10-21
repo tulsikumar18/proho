@@ -38,7 +38,7 @@ export const PropertiesView: React.FC<PropertiesViewProps> = ({
         <div>
           <h3>Property Inventory & Submissions</h3>
           <p style={{ fontSize: "12px", color: "var(--text-muted)", marginTop: 2 }}>
-            Manage sourced resale listings and curated Proho verified selling inventory.
+            Manage sourced resale listings and curated Aashrayo verified selling inventory.
           </p>
         </div>
 

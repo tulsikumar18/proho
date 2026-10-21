@@ -73,7 +73,7 @@ export const VisitsView: React.FC<VisitsViewProps> = ({ visits, onCancelVisit })
                   <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>{item.partner_phone}</div>
                 </td>
                 <td>{item.customer_name || "Direct Buyer"}</td>
-                <td>{item.assigned_representative || "Proho Field Executive"}</td>
+                <td>{item.assigned_representative || "Aashrayo Field Executive"}</td>
                 <td>
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <Clock size={13} color="var(--text-muted)" />

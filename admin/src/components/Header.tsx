@@ -12,7 +12,7 @@ export const Header: React.FC<HeaderProps> = ({ user, activeTabTitle }) => {
     <header className="admin-header">
       <div className="header-title-group">
         <h2>{activeTabTitle}</h2>
-        <p>Proho Real Estate Channel Partner Operations</p>
+        <p>Aashrayo Real Estate Channel Partner Operations</p>
       </div>
 
       <div className="header-actions">

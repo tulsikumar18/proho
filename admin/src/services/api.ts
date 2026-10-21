@@ -19,8 +19,8 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localho
 export const initialMockUser: User = {
   id: "usr-admin-001",
   phone: "+919999999999",
-  email: "admin@proho.in",
-  full_name: "Proho Operations Lead",
+  email: "admin@aashrayo.in",
+  full_name: "Aashrayo Operations Lead",
   role: "ADMIN",
   preferred_language: "en",
   is_active: true,
@@ -28,6 +28,19 @@ export const initialMockUser: User = {
 };
 
 export const initialMockKycSubmissions: KycSubmission[] = [
+  {
+    id: "kyc-000",
+    partner_id: "prt-kritaank",
+    partner_name: "Kritaank Krishna",
+    partner_phone: "+91 8073526342",
+    agency_name: "Individual",
+    pan_number: "ABCDE1234F",
+    pan_document_url: "https://proho-storage.s3.ap-southeast-2.amazonaws.com/kyc/pan_sample1.pdf",
+    aadhaar_last_four: "4321",
+    address_document_url: "https://proho-storage.s3.ap-southeast-2.amazonaws.com/kyc/address_sample1.pdf",
+    status: "PENDING",
+    created_at: "2026-10-21T18:30:00Z",
+  },
   {
     id: "kyc-001",
     partner_id: "prt-001",
@@ -52,7 +65,7 @@ export const initialMockKycSubmissions: KycSubmission[] = [
     pan_document_url: "https://proho-storage.s3.ap-southeast-2.amazonaws.com/kyc/pan_sample2.pdf",
     aadhaar_last_four: "8899",
     status: "APPROVED",
-    reviewed_by: "Proho Admin",
+    reviewed_by: "Aashrayo Admin",
     reviewed_at: "2026-10-21T11:00:00Z",
     created_at: "2026-10-20T14:30:00Z",
   },
@@ -65,7 +78,7 @@ export const initialMockKycSubmissions: KycSubmission[] = [
     aadhaar_last_four: "1122",
     status: "REJECTED",
     rejection_reason: "Aadhaar address proof blurred and unreadable. Please upload a clear photo or utility bill.",
-    reviewed_by: "Proho Admin",
+    reviewed_by: "Aashrayo Admin",
     reviewed_at: "2026-10-21T12:00:00Z",
     created_at: "2026-10-20T16:00:00Z",
   },
@@ -101,7 +114,7 @@ export const initialMockProperties: Property[] = [
     owner_name: "Amit Verma",
     owner_phone: "+919811223344",
     title: "ACE Divino — Luxury 2 BHK Corner Unit",
-    category: "PROHO_VERIFIED_POOL",
+    category: "AASHRAYO_VERIFIED_POOL",
     society_name: "ACE Divino",
     tower: "Tower A",
     unit_number: "802",
@@ -166,7 +179,7 @@ export const initialMockOffers: Offer[] = [
     offer_amount: "8000000.00",
     status: "COUNTERED",
     counter_amount: "8300000.00",
-    notes: "Proho counteroffer issued at ₹83,00,000 including covered basement car parking.",
+    notes: "Aashrayo counteroffer issued at ₹83,00,000 including covered basement car parking.",
     created_at: "2026-10-21T08:15:00Z",
   },
   {
@@ -178,7 +191,7 @@ export const initialMockOffers: Offer[] = [
     customer_name: "Rahul Saxena",
     offer_amount: "6700000.00",
     status: "ACCEPTED",
-    notes: "Accepted by Proho Acquisition Team. Deal token generated.",
+    notes: "Accepted by Aashrayo Acquisition Team. Deal token generated.",
     created_at: "2026-10-20T16:30:00Z",
   },
 ];
@@ -277,7 +290,7 @@ export const initialMockDeals: Deal[] = [
 export const initialMockInvoices: Invoice[] = [
   {
     id: "inv-001",
-    invoice_number: "PROHO/2026-27/0001",
+    invoice_number: "AASHRAYO/2026-27/0001",
     partner_name: "Amit Verma",
     gross_commission: "134000.00",
     tds_rate: "5.00",
@@ -291,7 +304,7 @@ export const initialMockInvoices: Invoice[] = [
 export const initialMockAuditLogs: AuditLog[] = [
   {
     id: "log-001",
-    actor_name: "Proho Admin",
+    actor_name: "Aashrayo Admin",
     action: "KYC_APPROVED",
     target_model: "KycSubmission",
     target_id: "kyc-002",
@@ -301,7 +314,7 @@ export const initialMockAuditLogs: AuditLog[] = [
   },
   {
     id: "log-002",
-    actor_name: "Proho Admin",
+    actor_name: "Aashrayo Admin",
     action: "PAYOUT_PAID",
     target_model: "PayoutRequest",
     target_id: "pay-003",
@@ -311,12 +324,12 @@ export const initialMockAuditLogs: AuditLog[] = [
   },
   {
     id: "log-003",
-    actor_name: "Proho Admin",
+    actor_name: "Aashrayo Admin",
     action: "DEAL_REGISTERED",
     target_model: "Deal",
     target_id: "deal-001",
     ip_address: "127.0.0.1",
-    metadata: { agreement_value: "6700000.00", invoice_number: "PROHO/2026-27/0001" },
+    metadata: { agreement_value: "6700000.00", invoice_number: "AASHRAYO/2026-27/0001" },
     created_at: "2026-10-20T18:00:00Z",
   },
 ];
@@ -336,13 +349,64 @@ class AdminDataStore {
   private invoiceList: Invoice[] = [...initialMockInvoices];
   private auditLogList: AuditLog[] = [...initialMockAuditLogs];
 
+  constructor() {
+    this.loadFromStorage();
+  }
+
+  private loadFromStorage() {
+    if (typeof window !== "undefined" && window.localStorage) {
+      try {
+        const storedKyc = window.localStorage.getItem("aashrayo_kyc_list");
+        if (storedKyc) {
+          const parsed = JSON.parse(storedKyc);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            this.kycList = parsed;
+          }
+        }
+      } catch (e) {}
+    }
+  }
+
+  private saveKycToStorage() {
+    if (typeof window !== "undefined" && window.localStorage) {
+      try {
+        window.localStorage.setItem("aashrayo_kyc_list", JSON.stringify(this.kycList));
+      } catch (e) {}
+    }
+  }
+
   getUser(): User {
     return this.user;
   }
 
   // --- KYC ---
   getKycSubmissions(): KycSubmission[] {
+    this.loadFromStorage();
     return this.kycList;
+  }
+
+  submitKyc(submission: Partial<KycSubmission>): KycSubmission {
+    const item: KycSubmission = {
+      id: submission.id || `kyc-${Date.now().toString().slice(-4)}`,
+      partner_id: submission.partner_id || "prt-kritaank",
+      partner_name: submission.partner_name || "Kritaank Krishna",
+      partner_phone: submission.partner_phone || "+91 8073526342",
+      agency_name: submission.agency_name || "Individual",
+      pan_number: submission.pan_number || "ABCDE1234F",
+      pan_document_url: submission.pan_document_url || "https://proho-storage.s3.ap-southeast-2.amazonaws.com/kyc/pan_sample1.pdf",
+      aadhaar_last_four: submission.aadhaar_last_four || "4321",
+      address_document_url: submission.address_document_url || "https://proho-storage.s3.ap-southeast-2.amazonaws.com/kyc/address_sample1.pdf",
+      status: "PENDING",
+      created_at: new Date().toISOString(),
+    };
+    this.kycList = this.kycList.filter((k) => k.partner_id !== item.partner_id);
+    this.kycList.unshift(item);
+    this.saveKycToStorage();
+    this.addAuditLog("KYC_SUBMITTED", "KycSubmission", item.id, {
+      partner: item.partner_name,
+      pan: item.pan_number,
+    });
+    return item;
   }
 
   reviewKyc(id: string, newStatus: "APPROVED" | "REJECTED", reason?: string): KycSubmission {
@@ -354,6 +418,7 @@ class AdminDataStore {
     if (newStatus === "REJECTED") {
       item.rejection_reason = reason || "Documents failed verification checks.";
     }
+    this.saveKycToStorage();
     this.addAuditLog(`KYC_${newStatus}`, "KycSubmission", id, { status: newStatus, reason });
     return { ...item };
   }
@@ -471,7 +536,7 @@ class AdminDataStore {
 
     const newInvoice: Invoice = {
       id: `inv-${Date.now().toString().slice(-4)}`,
-      invoice_number: `PROHO/2026-27/${(this.invoiceList.length + 1).toString().padStart(4, "0")}`,
+      invoice_number: `AASHRAYO/2026-27/${(this.invoiceList.length + 1).toString().padStart(4, "0")}`,
       partner_name: partnerName,
       gross_commission: grossComm.toFixed(2),
       tds_rate: "5.00",

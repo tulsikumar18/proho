@@ -1,6 +1,6 @@
-# Proho Channel Partner Platform — Admin Web Portal
+# Aashrayo Channel Partner Platform — Admin Web Portal
 
-A high-performance, responsive web-based operational management portal built for Proho Operations Leads, Admins, and Superadmins to supervise channel partner activities, inventory verification, negotiations, and financial disbursements.
+A high-performance, responsive web-based operational management portal built for Aashrayo Operations Leads, Admins, and Superadmins to supervise channel partner activities, inventory verification, negotiations, and financial disbursements.
 
 ---
 

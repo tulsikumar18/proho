@@ -5,10 +5,10 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView,
   Modal,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { MapPin, Search, ChevronDown, Check, ChevronRight } from "lucide-react-native";
 import { COLORS, BASE_LOCATIONS, ALL_WORK_AREAS } from "../constants/theme";

@@ -21,7 +21,7 @@ export const ShareModal: React.FC<Props> = ({ visible, property, onClose }) => {
   if (!property) return null;
 
   const referralToken = `ref_${property.id.slice(-6)}_${Date.now().toString().slice(-4)}`;
-  const shareLink = `https://proho.in/p/${referralToken}`;
+  const shareLink = `https://aashrayo.in/p/${referralToken}`;
 
   const handleShareWhatsApp = () => {
     onClose();

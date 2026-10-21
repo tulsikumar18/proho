@@ -13,7 +13,7 @@ export const SupportFab: React.FC<Props> = ({ onPress }) => {
       onPress();
     } else {
       Alert.alert(
-        "Proho Partner Support",
+        "Aashrayo Partner Support",
         "Direct Line: +91 9999 123 456\nAvailable 9:00 AM – 8:00 PM for site visit assistance, inventory queries, and payouts.",
         [{ text: "Call Support" }, { text: "Dismiss", style: "cancel" }]
       );

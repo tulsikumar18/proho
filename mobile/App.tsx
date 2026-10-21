@@ -17,6 +17,10 @@ import { ScheduleVisitModal } from "./src/components/ScheduleVisitModal";
 import { SubmitUnitModal } from "./src/components/SubmitUnitModal";
 import { ShareModal } from "./src/components/ShareModal";
 import { InvoicesModal } from "./src/components/InvoicesModal";
+import { MyDetailsScreen } from "./src/screens/MyDetailsScreen";
+import { AddUnitWizardScreen, SourcedUnitData } from "./src/screens/sourcing/AddUnitWizardScreen";
+import { SourcingUnitDetailScreen } from "./src/screens/sourcing/SourcingUnitDetailScreen";
+import { sampleSourcedUnits } from "./src/screens/tabs/SourcingScreen";
 import {
   initialPartnerProfile,
   sampleProperties,
@@ -34,8 +38,12 @@ export default function App() {
   const [profile, setProfile] = useState<PartnerProfile>(initialPartnerProfile);
   const [properties, setProperties] = useState<PropertyItem[]>(sampleProperties);
   const [invoices, setInvoices] = useState(sampleInvoices);
+  const [sourcedUnits, setSourcedUnits] = useState<SourcedUnitData[]>(sampleSourcedUnits);
+  const [selectedSourcedUnit, setSelectedSourcedUnit] = useState<SourcedUnitData | null>(null);
 
-  // Modals
+  // Modals & Sub-screens
+  const [showMyDetails, setShowMyDetails] = useState(false);
+  const [showAddUnitWizard, setShowAddUnitWizard] = useState(false);
   const [showKycModal, setShowKycModal] = useState(false);
   const [showScheduleVisitModal, setShowScheduleVisitModal] = useState(false);
   const [selectedPropertyForVisit, setSelectedPropertyForVisit] = useState<PropertyItem | null>(null);
@@ -170,8 +178,8 @@ export default function App() {
                 <HomeScreen
                   profile={profile}
                   onNavigateTab={setActiveTab}
-                  onOpenKycModal={() => setShowKycModal(true)}
-                  onOpenSubmitUnit={() => setShowSubmitUnitModal(true)}
+                  onOpenMyDetails={() => setShowMyDetails(true)}
+                  onOpenSubmitUnit={() => setShowAddUnitWizard(true)}
                   onOpenScheduleVisit={() => handleTriggerScheduleVisit()}
                   onOpenShareModal={() => handleTriggerShare()}
                   onToggleLanguage={handleToggleLanguage}
@@ -180,7 +188,9 @@ export default function App() {
 
               {activeTab === "Sourcing" && (
                 <SourcingScreen
-                  onOpenSubmitUnit={() => setShowSubmitUnitModal(true)}
+                  units={sourcedUnits}
+                  onOpenSubmitUnit={() => setShowAddUnitWizard(true)}
+                  onSelectUnit={(unit) => setSelectedSourcedUnit(unit)}
                 />
               )}
 
@@ -196,7 +206,7 @@ export default function App() {
               {activeTab === "Earnings" && (
                 <EarningsScreen
                   profile={profile}
-                  onOpenSubmitUnit={() => setShowSubmitUnitModal(true)}
+                  onOpenSubmitUnit={() => setShowAddUnitWizard(true)}
                   onOpenScheduleVisit={() => handleTriggerScheduleVisit()}
                 />
               )}
@@ -204,11 +214,12 @@ export default function App() {
               {activeTab === "More" && (
                 <MoreScreen
                   profile={profile}
+                  onOpenMyDetails={() => setShowMyDetails(true)}
                   onOpenKycModal={() => setShowKycModal(true)}
                   onOpenInvoicesModal={() => setShowInvoicesModal(true)}
                   onOpenCpPolicy={() =>
                     Alert.alert(
-                      "Proho Channel Partner Policy",
+                      "Aashrayo Channel Partner Policy",
                       "• 2% Standard commission on closed resale units.\n• 60-day client attribution guarantee on registered leads.\n• Automated 5% Section 194H TDS withholding.\n• Bank disbursement within 72 hours of closing."
                     )
                   }
@@ -234,6 +245,56 @@ export default function App() {
 
             {/* Bottom Tab Bar */}
             <BottomTabBar activeTab={activeTab} onTabChange={setActiveTab} />
+          </View>
+        )}
+
+        {/* My Details / Full KYC Sub-screen */}
+        {showMyDetails && (
+          <View style={StyleSheet.absoluteFill}>
+            <MyDetailsScreen
+              profile={profile}
+              onBack={() => setShowMyDetails(false)}
+              onUpdateProfile={(updated) => {
+                setProfile((prev) => ({
+                  ...prev,
+                  ...updated,
+                  user: {
+                    ...prev.user,
+                    ...(updated.user || {}),
+                  },
+                }));
+              }}
+            />
+          </View>
+        )}
+
+        {/* Add Unit 3-Step Wizard Sub-screen */}
+        {showAddUnitWizard && (
+          <View style={StyleSheet.absoluteFill}>
+            <AddUnitWizardScreen
+              onBack={() => setShowAddUnitWizard(false)}
+              onSubmitSuccess={(newUnit) => {
+                setSourcedUnits((prev) => [newUnit, ...prev]);
+              }}
+              onViewUnits={() => {
+                setShowAddUnitWizard(false);
+                setActiveTab("Sourcing");
+              }}
+            />
+          </View>
+        )}
+
+        {/* Sourcing Unit Detail Sub-screen */}
+        {selectedSourcedUnit && (
+          <View style={StyleSheet.absoluteFill}>
+            <SourcingUnitDetailScreen
+              unit={selectedSourcedUnit}
+              onBack={() => setSelectedSourcedUnit(null)}
+              onWithdraw={(id) => {
+                setSourcedUnits((prev) => prev.filter((u) => u.id !== id));
+                setSelectedSourcedUnit(null);
+              }}
+            />
           </View>
         )}
 
