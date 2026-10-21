@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  NativeSyntheticEvent,
+  TextInputKeyPressEventData,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { COLORS } from "../constants/theme";
@@ -17,9 +19,18 @@ interface Props {
 }
 
 export const LoginScreen: React.FC<Props> = ({ onSuccessLogin }) => {
-  const [phoneNumber, setPhoneNumber] = useState("8073526342");
+  const [phoneNumber, setPhoneNumber] = useState("9876543210");
   const [otpStep, setOtpStep] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const inputRefs = useRef<Array<TextInput | null>>([]);
+
+  useEffect(() => {
+    if (otpStep) {
+      setTimeout(() => {
+        inputRefs.current[0]?.focus();
+      }, 100);
+    }
+  }, [otpStep]);
 
   const handleSendOtp = () => {
     if (phoneNumber.length >= 10) {
@@ -32,9 +43,37 @@ export const LoginScreen: React.FC<Props> = ({ onSuccessLogin }) => {
   };
 
   const handleOtpChange = (val: string, index: number) => {
+    // Handle pasting multi-digit code (e.g. 6-digit SMS code)
+    if (val.length > 1) {
+      const digits = val.replace(/\D/g, "").slice(0, 6).split("");
+      const newOtp = [...otp];
+      digits.forEach((d, i) => {
+        if (i < 6) newOtp[i] = d;
+      });
+      setOtp(newOtp);
+      const nextIndex = Math.min(digits.length, 5);
+      inputRefs.current[nextIndex]?.focus();
+      return;
+    }
+
     const newOtp = [...otp];
     newOtp[index] = val;
     setOtp(newOtp);
+
+    // Auto-advance to next box if digit entered
+    if (val && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyPress = (
+    e: NativeSyntheticEvent<TextInputKeyPressEventData>,
+    index: number
+  ) => {
+    // If backspacing an empty box, move focus to previous box
+    if (e.nativeEvent.key === "Backspace" && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
   };
 
   return (
@@ -104,11 +143,15 @@ export const LoginScreen: React.FC<Props> = ({ onSuccessLogin }) => {
                 {[0, 1, 2, 3, 4, 5].map((idx) => (
                   <TextInput
                     key={idx}
+                    ref={(ref) => {
+                      inputRefs.current[idx] = ref;
+                    }}
                     style={styles.otpBox}
                     keyboardType="number-pad"
                     maxLength={1}
                     value={otp[idx]}
                     onChangeText={(val) => handleOtpChange(val, idx)}
+                    onKeyPress={(e) => handleKeyPress(e, idx)}
                   />
                 ))}
               </View>

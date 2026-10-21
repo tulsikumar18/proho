@@ -97,5 +97,5 @@ npx expo start
 - **Phase 5**: Commission rules, earnings ledger, statements, payout requests, and manual payout decisions. *(COMPLETED)*
 - **Phase 6**: Admin web dashboard for all required operational workflows. *(COMPLETED)*
 - **Phase 7**: Mobile application integration, notifications, referral sharing, and full user flows. *(COMPLETED)*
-- **Phase 8**: Security review, integration tests, end-to-end testing, deployment, and release preparation. *(NEXT)*
-- **Phase 9**: Smart-lock integration after vendor selection.
+- **Phase 8**: Security review, integration tests, end-to-end testing, deployment, and release preparation. *(COMPLETED)*
+- **Phase 9**: Smart-lock integration after vendor selection. *(NEXT)*
