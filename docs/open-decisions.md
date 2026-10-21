@@ -13,6 +13,7 @@ This document tracks unresolved product questions, edge-case policies, and archi
 | **OD-05** | **Offline Visits without Smart Locks** | If a unit does not have a smart lock, does an on-site Proho executive verify the visit OTP using their own app/portal? *Assumption: Yes, the site manager or security guard portal verifies the OTP.* | Visits, Bookings | `PENDING_CONFIRMATION` | Operations |
 | **OD-06** | **Payout Minimum & Frequency** | Minimum ₹5,000 threshold; payout batch processed weekly on Thursdays. | Payouts | `CONFIRMED_WORKING_ASSUMPTION` | Finance |
 | **OD-07** | **Multi-Language Content** | UI strings localized for English and Hindi. Dynamic property descriptions stored in English, optional Hindi translation fallback. | Mobile App | `CONFIRMED_WORKING_ASSUMPTION` | Product |
+| **OD-22** | **Public Property Discovery, Sharing Links, & Duplicate Listing Policy** | Approved inventory is browsable publicly without disclosing exact unit numbers; sharing links carry partner referral tokens for buyer attribution; duplicate submissions matching `(society_name, tower, unit_number)` trigger admin arbitration. | Properties, Inventory, Leads | `PENDING_CONFIRMATION` | Product / Operations |
 
 ---
 

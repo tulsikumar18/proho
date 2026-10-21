@@ -30,6 +30,17 @@ from apps.partners.views import (
     AdminKycDetailView,
     AdminKycReviewView,
 )
+from apps.properties.views import (
+    SellingInventoryListView,
+    PartnerPropertyListCreateView,
+    PartnerPropertyDetailView,
+    PartnerPropertySubmitView,
+    PropertyMediaListCreateView,
+    PropertyMediaDetailView,
+    AdminPropertyListView,
+    AdminPropertyReviewView,
+    AdminPropertyArchiveView,
+)
 
 v1_patterns = [
     # Core health & infrastructure
@@ -66,6 +77,52 @@ v1_patterns = [
         "admin/kyc/<uuid:pk>/review/",
         AdminKycReviewView.as_view(),
         name="admin_kyc_review",
+    ),
+    # Properties & Inventory Management (Phase 3)
+    path(
+        "properties/inventory/",
+        SellingInventoryListView.as_view(),
+        name="selling_inventory_list",
+    ),
+    path(
+        "properties/",
+        PartnerPropertyListCreateView.as_view(),
+        name="partner_property_list_create",
+    ),
+    path(
+        "properties/<uuid:pk>/",
+        PartnerPropertyDetailView.as_view(),
+        name="partner_property_detail",
+    ),
+    path(
+        "properties/<uuid:pk>/submit/",
+        PartnerPropertySubmitView.as_view(),
+        name="partner_property_submit",
+    ),
+    path(
+        "properties/<uuid:pk>/media/",
+        PropertyMediaListCreateView.as_view(),
+        name="property_media_list_create",
+    ),
+    path(
+        "properties/<uuid:pk>/media/<uuid:media_id>/",
+        PropertyMediaDetailView.as_view(),
+        name="property_media_detail",
+    ),
+    path(
+        "admin/properties/",
+        AdminPropertyListView.as_view(),
+        name="admin_property_list",
+    ),
+    path(
+        "admin/properties/<uuid:pk>/review/",
+        AdminPropertyReviewView.as_view(),
+        name="admin_property_review",
+    ),
+    path(
+        "admin/properties/<uuid:pk>/archive/",
+        AdminPropertyArchiveView.as_view(),
+        name="admin_property_archive",
     ),
     # Authorization foundation test endpoints
     path("test/partner/", PartnerTestView.as_view(), name="test_partner_endpoint"),

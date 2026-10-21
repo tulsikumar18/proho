@@ -6,6 +6,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [Phase 3] - 2026-10-21
+### Added
+- `apps.properties` Django application for property and inventory management.
+- `Property` model with UUID PK, `owner` foreign key to `PartnerProfile`, status workflow (`DRAFT`, `PENDING_REVIEW`, `APPROVED`, `REJECTED`, `ARCHIVED`), BHK choices, pricing in INR, and auto-computed `rate_per_sqft`.
+- `PropertyMedia` model supporting property images, floor plans, cover image designation, and display ordering.
+- `PropertyService` enforcing strict partner listing ownership, draft editing safeguards, validation of mandatory fields before submission, admin approval/rejection with mandatory justification, media attachment (10MB limit, JPG/PNG/WebP), and audit trail logging.
+- Partner API endpoints:
+  - `GET /api/v1/properties/`: List authenticated partner's properties.
+  - `POST /api/v1/properties/`: Create draft property listing.
+  - `GET /api/v1/properties/{id}/`: Retrieve partner property details.
+  - `PATCH /api/v1/properties/{id}/`: Update draft/rejected property.
+  - `DELETE /api/v1/properties/{id}/`: Delete draft property.
+  - `POST /api/v1/properties/{id}/submit/`: Submit draft property for review.
+  - `GET /api/v1/properties/{id}/media/`: List media assets for property.
+  - `POST /api/v1/properties/{id}/media/`: Upload media photo/document.
+  - `DELETE /api/v1/properties/{id}/media/{media_id}/`: Remove media item.
+  - `PATCH /api/v1/properties/{id}/media/{media_id}/`: Update cover/caption/order.
+- Public/Selling inventory discovery endpoint:
+  - `GET /api/v1/properties/inventory/`: Browse verified approved inventory with filters (`bhk`, `society`, `min_price`, `max_price`, `search`).
+- Administrative property management endpoints:
+  - `GET /api/v1/admin/properties/`: List all properties with status filter.
+  - `POST /api/v1/admin/properties/{id}/review/`: Approve or reject property listing.
+  - `POST /api/v1/admin/properties/{id}/archive/`: Archive property listing.
+- 15 new automated pytest tests (54 tests total across the project) verifying lifecycle transitions, ownership isolation, media restrictions, and review actions with 92% total code coverage.
+
 ## [Phase 2] - 2026-10-21
 ### Added
 - Phone OTP authentication flow (`POST /api/v1/auth/otp/request/` and `POST /api/v1/auth/otp/verify/`) with 300-second expiration, 3-attempt brute-force protection, salted SHA256/PBKDF2 hashing, and JWT issuance (`access` and `refresh`).

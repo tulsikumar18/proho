@@ -49,6 +49,7 @@ LOCAL_APPS = [
     "apps.core",
     "apps.accounts",
     "apps.partners",
+    "apps.properties",
     "apps.audit",
 ]
 
