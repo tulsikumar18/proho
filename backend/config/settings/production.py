@@ -3,6 +3,7 @@
 from .base import *
 
 DEBUG = False
+IS_PRODUCTION = True
 
 # Security headers for production
 SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=True)

@@ -84,6 +84,15 @@ class PartnerProfile(models.Model):
         """True if the partner KYC has been approved by an administrator."""
         return self.kyc_status == KycStatus.APPROVED
 
+    @property
+    def business_name(self) -> str:
+        """Convenience alias for agency_name."""
+        return self.agency_name
+
+    @business_name.setter
+    def business_name(self, value: str):
+        self.agency_name = value
+
 
 class KycSubmission(models.Model):
     """

@@ -6,6 +6,51 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [Phase 4] - 2026-10-21
+### Added
+- `apps.leads` application for leads, referral attribution, and secure token sharing:
+  - `Lead` model tracking customer contact info, property interest, explicit lifecycle (`NEW`, `CONTACTED`, `VISITING`, `OFFER_MADE`, `CLOSED`, `LOST`, `EXPIRED`), 60-day attribution lock-in window (`attribution_expires_at`), and `last_interaction_at`.
+  - `ReferralToken` model supporting opaque, cryptographically secure 32-character URL tokens (`secrets.token_urlsafe`) linking partner profiles to approved properties.
+  - Duplicate referral attribution engine in `LeadService`: duplicate customer phone submissions within 60 days by competing partners are rejected with privacy safeguards without disclosing previous partner data.
+  - Automatic attribution extension upon site visits and offer submissions.
+  - Endpoints:
+    - `GET /api/v1/leads/`: List partner's buyer leads.
+    - `POST /api/v1/leads/`: Create lead with 60-day attribution lock and duplicate phone check.
+    - `GET /api/v1/leads/{id}/`: Lead detail view.
+    - `PATCH /api/v1/leads/{id}/`: Update customer and interest details.
+    - `POST /api/v1/leads/referral-tokens/`: Generate referral token for approved property.
+    - `GET /api/v1/leads/referral-tokens/{token}/resolve/`: Public resolution returning sanitized property details and partner attribution without leaking private contact info or internal IDs.
+- `apps.offers` application for offer and counteroffer lifecycle management:
+  - `Offer` model with `DecimalField(max_digits=14, decimal_places=2)` for INR amounts, explicit lifecycle (`DRAFT`, `SUBMITTED`, `UNDER_REVIEW`, `COUNTERED`, `ACCEPTED`, `REJECTED`, `EXPIRED`), notes, rejection reason, validity expiration, and self-referential `counter_to` foreign key for full negotiation audit chains.
+  - `OfferService` ensuring atomic status transitions, partner draft editing, admin review justification, counteroffer generation, and automatic lead status synchronization.
+  - Endpoints:
+    - `GET /api/v1/offers/`: List partner or all (admin) offers.
+    - `POST /api/v1/offers/`: Create draft offer.
+    - `GET /api/v1/offers/{id}/`: Retrieve offer details.
+    - `PATCH /api/v1/offers/{id}/`: Update draft offer.
+    - `POST /api/v1/offers/{id}/submit/`: Submit draft offer.
+    - `POST /api/v1/offers/{id}/review/`: Admin review (`ACCEPT`, `REJECT`, `UNDER_REVIEW`).
+    - `POST /api/v1/offers/{id}/counter/`: Counteroffer linking to parent offer.
+- `apps.visits` application for bookings, site visits, and OTP door verification:
+  - `Booking` model with lifecycle (`REQUESTED`, `CONFIRMED`, `CANCELLED`, `COMPLETED`), linking property, lead, and partner.
+  - `Visit` model supporting scheduled 1-hour slots (09:00 AM - 07:00 PM), representative assignment, lifecycle (`SCHEDULED`, `VERIFIED_COMPLETED`, `CANCELLED`, `NO_SHOW`, `FAILED_VERIFICATION`), and cancellation reasons.
+  - `VisitOtp` model storing salted PBKDF2 hashes of 6-digit cryptographic verification codes, 300-second expiration, 3-attempt brute-force protection, replay protection, and one-time consumption.
+  - `BookingService` and `VisitService` enforcing partner approved KYC prerequisite, unit slot non-overlap concurrency, 2-hour cancellation window, and lead attribution extension upon visit completion.
+  - Endpoints:
+    - `GET /api/v1/visits/bookings/`: List bookings.
+    - `POST /api/v1/visits/bookings/`: Create booking request.
+    - `GET /api/v1/visits/bookings/{id}/`: Booking details.
+    - `POST /api/v1/visits/bookings/{id}/cancel/`: Cancel booking.
+    - `POST /api/v1/visits/bookings/{id}/confirm/`: Admin confirm booking.
+    - `GET /api/v1/visits/`: List scheduled visits.
+    - `POST /api/v1/visits/`: Schedule site visit (requires Approved KYC, 1-hour slot, no slot conflict).
+    - `GET /api/v1/visits/{id}/`: Retrieve visit details.
+    - `POST /api/v1/visits/{id}/cancel/`: Cancel visit (requires >= 2 hours prior to slot).
+    - `POST /api/v1/visits/{id}/reschedule/`: Reschedule visit.
+    - `POST /api/v1/visits/{id}/otp/request/`: Request 6-digit OTP (development preview in non-prod, plaintext never stored in DB).
+    - `POST /api/v1/visits/{id}/otp/verify/`: Verify OTP at door (atomic consumption, brute-force lockout, marks visit completed).
+- 25 new automated pytest tests (79 tests total across the platform) with 89% total code coverage and 0 linting errors.
+
 ## [Phase 3] - 2026-10-21
 ### Added
 - `apps.properties` Django application for property and inventory management.

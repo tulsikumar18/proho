@@ -93,8 +93,8 @@ npx expo start
 - **Phase 1**: Django project, SQLite-first setup, custom user model, migrations, permissions, and test foundation. *(COMPLETED)*
 - **Phase 2**: Authentication (Phone OTP & JWT), partner profiles, KYC submission, and manual admin review. *(COMPLETED)*
 - **Phase 3**: Property inventory, media upload, listing approval, and search. *(COMPLETED)*
-- **Phase 4**: Leads, referral attribution, offers, bookings, visits, and OTP verification. *(NEXT)*
-- **Phase 5**: Commission rules, earnings ledger, statements, payout requests, and manual payout decisions.
+- **Phase 4**: Leads, referral attribution, offers, bookings, visits, and OTP verification. *(COMPLETED)*
+- **Phase 5**: Commission rules, earnings ledger, statements, payout requests, and manual payout decisions. *(NEXT)*
 - **Phase 6**: Admin web dashboard for all required operational workflows.
 - **Phase 7**: Mobile application integration, notifications, referral sharing, and full user flows.
 - **Phase 8**: Security review, integration tests, end-to-end testing, deployment, and release preparation.

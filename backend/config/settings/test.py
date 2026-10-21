@@ -3,6 +3,7 @@
 from .base import *
 
 DEBUG = False
+TESTING = True
 # Use in-memory SQLite for rapid test execution
 DATABASES = {
     "default": {

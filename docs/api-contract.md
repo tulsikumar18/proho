@@ -88,15 +88,34 @@ Standard Error Codes:
 
 ### Leads & Referrals (`/api/v1/leads/`)
 - `GET /api/v1/leads/`: List partner's referred buyer leads.
-- `POST /api/v1/leads/`: Register new buyer lead (checks 60-day attribution lock).
+- `POST /api/v1/leads/`: Register new buyer lead (checks 60-day attribution lock and duplicate phone).
 - `GET /api/v1/leads/{id}/`: View lead progress, visits, and active offers.
+- `PATCH /api/v1/leads/{id}/`: Update customer and interest details.
+- `POST /api/v1/leads/referral-tokens/`: Generate secure referral token for approved property.
+- `GET /api/v1/leads/referral-tokens/{token}/resolve/`: Public resolution of referral token returning sanitized property and partner metadata.
 
-### Visits & OTP Verification (`/api/v1/visits/`)
+### Offers & Counteroffers (`/api/v1/offers/`)
+- `GET /api/v1/offers/`: List partner or all (admin) offers.
+- `POST /api/v1/offers/`: Create draft offer on eligible property.
+- `GET /api/v1/offers/{id}/`: Retrieve offer details and counteroffer chain.
+- `PATCH /api/v1/offers/{id}/`: Update draft offer.
+- `POST /api/v1/offers/{id}/submit/`: Submit draft offer for review.
+- `POST /api/v1/offers/{id}/review/`: Admin review (`ACCEPT`, `REJECT` with reason, or `UNDER_REVIEW`).
+- `POST /api/v1/offers/{id}/counter/`: Submit counteroffer linked to parent offer.
+
+### Bookings & Visits (`/api/v1/visits/`)
+- `GET /api/v1/visits/bookings/`: List bookings.
+- `POST /api/v1/visits/bookings/`: Create booking request.
+- `GET /api/v1/visits/bookings/{id}/`: Booking details.
+- `POST /api/v1/visits/bookings/{id}/cancel/`: Cancel booking.
+- `POST /api/v1/visits/bookings/{id}/confirm/`: Admin confirm booking.
 - `GET /api/v1/visits/`: List scheduled and past visits for the partner.
-- `POST /api/v1/visits/`: Book a property visit slot (Requires Approved KYC).
-- `POST /api/v1/visits/{id}/cancel/`: Cancel scheduled visit.
-- `GET /api/v1/visits/{id}/otp/`: Request active 6-digit OTP for visit slot.
-- `POST /api/v1/visits/{id}/verify-otp/`: Verify OTP at door (Partner / Site staff).
+- `POST /api/v1/visits/`: Book a property visit slot (Requires Approved KYC, 1-hour slot between 09:00 and 19:00, no slot conflict).
+- `GET /api/v1/visits/{id}/`: Retrieve visit details.
+- `POST /api/v1/visits/{id}/cancel/`: Cancel scheduled visit (Requires >= 2 hours prior to slot).
+- `POST /api/v1/visits/{id}/reschedule/`: Reschedule visit.
+- `POST /api/v1/visits/{id}/otp/request/`: Generate cryptographically secure 6-digit OTP (dev preview in non-prod).
+- `POST /api/v1/visits/{id}/otp/verify/`: Verify OTP at door (Partner / Site staff, max 3 attempts, 300s expiry, replay protection).
 
 ### Earnings & Finance (`/api/v1/finance/`)
 - `GET /api/v1/finance/summary/`: Summary of total earned, available balance, locked balance.

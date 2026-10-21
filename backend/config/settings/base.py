@@ -3,6 +3,7 @@ Base settings for Proho backend project.
 """
 
 from pathlib import Path
+from decimal import Decimal
 import environ
 from django.core.exceptions import ImproperlyConfigured
 
@@ -50,6 +51,9 @@ LOCAL_APPS = [
     "apps.accounts",
     "apps.partners",
     "apps.properties",
+    "apps.leads",
+    "apps.offers",
+    "apps.visits",
     "apps.audit",
 ]
 
@@ -263,3 +267,13 @@ LOGGING = {
         },
     },
 }
+
+# ==============================================================================
+# Business Configuration
+# ==============================================================================
+IS_PRODUCTION = False
+DEFAULT_CURRENCY = env("DEFAULT_CURRENCY", default="INR")
+OTP_EXPIRY_SECONDS = env.int("OTP_EXPIRY_SECONDS", default=300)
+OTP_MAX_ATTEMPTS = env.int("OTP_MAX_ATTEMPTS", default=3)
+MINIMUM_PAYOUT_AMOUNT = Decimal(env("MINIMUM_PAYOUT_AMOUNT", default="5000.00"))
+REFERRAL_ATTRIBUTION_DAYS = env.int("REFERRAL_ATTRIBUTION_DAYS", default=60)

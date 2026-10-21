@@ -41,6 +41,31 @@ from apps.properties.views import (
     AdminPropertyReviewView,
     AdminPropertyArchiveView,
 )
+from apps.leads.views import (
+    PartnerLeadListCreateView,
+    PartnerLeadDetailView,
+    ReferralTokenCreateView,
+    PublicReferralTokenResolveView,
+)
+from apps.offers.views import (
+    OfferListCreateView,
+    OfferDetailView,
+    OfferSubmitView,
+    OfferReviewView,
+    OfferCounterView,
+)
+from apps.visits.views import (
+    BookingListCreateView,
+    BookingDetailView,
+    BookingCancelView,
+    BookingConfirmView,
+    VisitListScheduleView,
+    VisitDetailView,
+    VisitCancelView,
+    VisitRescheduleView,
+    VisitOtpRequestView,
+    VisitOtpVerifyView,
+)
 
 v1_patterns = [
     # Core health & infrastructure
@@ -123,6 +148,80 @@ v1_patterns = [
         "admin/properties/<uuid:pk>/archive/",
         AdminPropertyArchiveView.as_view(),
         name="admin_property_archive",
+    ),
+    # Leads & Referrals (Phase 4)
+    path("leads/", PartnerLeadListCreateView.as_view(), name="lead_list_create"),
+    path("leads/<uuid:pk>/", PartnerLeadDetailView.as_view(), name="lead_detail"),
+    path(
+        "leads/share-property/",
+        ReferralTokenCreateView.as_view(),
+        name="referral_token_create",
+    ),
+    path(
+        "leads/referral-token/<str:token>/",
+        PublicReferralTokenResolveView.as_view(),
+        name="referral_token_resolve",
+    ),
+    # Offers & Counteroffers (Phase 4)
+    path("offers/", OfferListCreateView.as_view(), name="offer_list_create"),
+    path("offers/<uuid:pk>/", OfferDetailView.as_view(), name="offer_detail"),
+    path(
+        "offers/<uuid:pk>/submit/",
+        OfferSubmitView.as_view(),
+        name="offer_submit",
+    ),
+    path(
+        "offers/<uuid:pk>/review/",
+        OfferReviewView.as_view(),
+        name="offer_review",
+    ),
+    path(
+        "offers/<uuid:pk>/counter/",
+        OfferCounterView.as_view(),
+        name="offer_counter",
+    ),
+    # Bookings & Visits (Phase 4)
+    path(
+        "bookings/",
+        BookingListCreateView.as_view(),
+        name="booking_list_create",
+    ),
+    path(
+        "bookings/<uuid:pk>/",
+        BookingDetailView.as_view(),
+        name="booking_detail",
+    ),
+    path(
+        "bookings/<uuid:pk>/cancel/",
+        BookingCancelView.as_view(),
+        name="booking_cancel",
+    ),
+    path(
+        "bookings/<uuid:pk>/confirm/",
+        BookingConfirmView.as_view(),
+        name="booking_confirm",
+    ),
+    path("visits/", VisitListScheduleView.as_view(), name="visit_list_schedule"),
+    path("visits/<uuid:pk>/", VisitDetailView.as_view(), name="visit_detail"),
+    path(
+        "visits/<uuid:pk>/cancel/",
+        VisitCancelView.as_view(),
+        name="visit_cancel",
+    ),
+    path(
+        "visits/<uuid:pk>/reschedule/",
+        VisitRescheduleView.as_view(),
+        name="visit_reschedule",
+    ),
+    path(
+        "visits/<uuid:pk>/request-otp/",
+        VisitOtpRequestView.as_view(),
+        name="visit_otp_request",
+    ),
+    path(
+        "visits/<uuid:pk>/verify-otp/",
+        VisitOtpVerifyView.as_view(),
+        name="visit_otp_verify",
     ),
     # Authorization foundation test endpoints
     path("test/partner/", PartnerTestView.as_view(), name="test_partner_endpoint"),

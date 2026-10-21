@@ -120,37 +120,88 @@ Image and video assets for property units.
 - `display_order`: `INTEGER` (Default `0`)
 - `created_at`: `TIMESTAMPTZ`
 
-### `leads_referral`
-Buyer leads submitted by channel partners.
+### `leads_lead`
+Buyer leads submitted and owned by channel partners.
 - `id`: `UUID` (PK)
-- `partner_id`: `UUID` (FK -> `partners_profile`)
+- `partner_id`: `UUID` (FK -> `partners_profile`, Indexed)
 - `customer_name`: `VARCHAR(255)`
 - `customer_phone`: `VARCHAR(15)` (Indexed)
 - `customer_email`: `VARCHAR(255)` (Nullable)
+- `property_id`: `UUID` (FK -> `properties_unit`, Nullable)
 - `budget_min`: `NUMERIC(14, 2)` (Nullable)
 - `budget_max`: `NUMERIC(14, 2)` (Nullable)
 - `preferred_bhk`: `VARCHAR(20)` (Nullable)
 - `preferred_location`: `VARCHAR(100)` (Nullable)
+- `source`: `VARCHAR(50)` (Default: `DIRECT_INPUT`)
+- `status`: `VARCHAR(30)` (`NEW`, `CONTACTED`, `VISITING`, `OFFER_MADE`, `CLOSED`, `LOST`, `EXPIRED`)
 - `attribution_expires_at`: `TIMESTAMPTZ` (Now + 60 days)
-- `status`: `VARCHAR(30)` (`ACTIVE`, `VISITING`, `OFFER_MADE`, `CLOSED`, `EXPIRED`)
+- `last_interaction_at`: `TIMESTAMPTZ`
+- `notes`: `TEXT`
+- `created_at`: `TIMESTAMPTZ`
+- `updated_at`: `TIMESTAMPTZ`
+
+### `leads_referral_token`
+Opaque URL sharing tokens for partner-attributed inventory marketing.
+- `id`: `UUID` (PK)
+- `token`: `VARCHAR(64)` (Unique, Indexed, 32-character base64url)
+- `partner_id`: `UUID` (FK -> `partners_profile`)
+- `property_id`: `UUID` (FK -> `properties_unit`)
+- `is_active`: `BOOLEAN` (Default `True`)
+- `clicks_count`: `INTEGER` (Default 0)
+- `expires_at`: `TIMESTAMPTZ` (Nullable)
 - `created_at`: `TIMESTAMPTZ`
 
-### `visits_booking`
-Scheduled property site visits.
+### `offers_offer`
+Property purchase/lease offers and counteroffer negotiation chains.
 - `id`: `UUID` (PK)
-- `unit_id`: `UUID` (FK -> `properties_unit`)
-- `partner_id`: `UUID` (FK -> `partners_profile`)
-- `lead_id`: `UUID` (FK -> `leads_referral`, Nullable)
+- `property_id`: `UUID` (FK -> `properties_unit`, Indexed)
+- `lead_id`: `UUID` (FK -> `leads_lead`, Nullable, Indexed)
+- `partner_id`: `UUID` (FK -> `partners_profile`, Indexed)
+- `created_by_id`: `UUID` (FK -> `accounts_user`)
+- `offer_amount`: `NUMERIC(14, 2)` (INR)
+- `status`: `VARCHAR(30)` (`DRAFT`, `SUBMITTED`, `UNDER_REVIEW`, `COUNTERED`, `ACCEPTED`, `REJECTED`, `EXPIRED`)
+- `counter_to_id`: `UUID` (Self-referential FK -> `offers_offer`, Nullable)
+- `expires_at`: `TIMESTAMPTZ` (Nullable, default 72h)
+- `notes`: `TEXT`
+- `rejection_reason`: `TEXT`
+- `created_at`: `TIMESTAMPTZ`
+- `updated_at`: `TIMESTAMPTZ`
+
+### `visits_booking`
+Property booking requests.
+- `id`: `UUID` (PK)
+- `property_id`: `UUID` (FK -> `properties_unit`, Indexed)
+- `lead_id`: `UUID` (FK -> `leads_lead`, Nullable)
+- `partner_id`: `UUID` (FK -> `partners_profile`, Indexed)
+- `status`: `VARCHAR(30)` (`REQUESTED`, `CONFIRMED`, `CANCELLED`, `COMPLETED`)
+- `booked_at`: `TIMESTAMPTZ`
+- `cancelled_at`: `TIMESTAMPTZ` (Nullable)
+- `cancellation_reason`: `TEXT`
+- `notes`: `TEXT`
+- `created_at`: `TIMESTAMPTZ`
+- `updated_at`: `TIMESTAMPTZ`
+
+### `visits_visit`
+Scheduled property site visits with slot lockout and representative assignment.
+- `id`: `UUID` (PK)
+- `booking_id`: `UUID` (FK -> `visits_booking`, Nullable)
+- `property_id`: `UUID` (FK -> `properties_unit`, Indexed)
+- `lead_id`: `UUID` (FK -> `leads_lead`, Nullable)
+- `partner_id`: `UUID` (FK -> `partners_profile`, Indexed)
+- `assigned_representative_id`: `UUID` (FK -> `accounts_user`, Nullable)
 - `scheduled_start`: `TIMESTAMPTZ` (Indexed)
 - `scheduled_end`: `TIMESTAMPTZ`
 - `status`: `VARCHAR(30)` (`SCHEDULED`, `VERIFIED_COMPLETED`, `CANCELLED`, `NO_SHOW`, `FAILED_VERIFICATION`)
+- `cancellation_reason`: `VARCHAR(255)`
+- `cancelled_at`: `TIMESTAMPTZ` (Nullable)
 - `created_at`: `TIMESTAMPTZ`
+- `updated_at`: `TIMESTAMPTZ`
 
 ### `visits_otp`
-Time-bound visit verification codes.
+Cryptographic salted PBKDF2 verification tokens for door access.
 - `id`: `UUID` (PK)
-- `visit_id`: `UUID` (FK -> `visits_booking`, Unique)
-- `otp_hash`: `VARCHAR(255)` (Salted hash of 6-digit OTP)
+- `visit_id`: `UUID` (FK -> `visits_visit`, Unique)
+- `otp_hash`: `VARCHAR(255)` (PBKDF2 salted hash of 6-digit OTP)
 - `expires_at`: `TIMESTAMPTZ` (Scheduled time + 300s window)
 - `attempt_count`: `INTEGER` (Default 0, max 3)
 - `is_consumed`: `BOOLEAN` (Default `False`)
