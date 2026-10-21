@@ -96,6 +96,6 @@ npx expo start
 - **Phase 4**: Leads, referral attribution, offers, bookings, visits, and OTP verification. *(COMPLETED)*
 - **Phase 5**: Commission rules, earnings ledger, statements, payout requests, and manual payout decisions. *(COMPLETED)*
 - **Phase 6**: Admin web dashboard for all required operational workflows. *(COMPLETED)*
-- **Phase 7**: Mobile application integration, notifications, referral sharing, and full user flows. *(NEXT)*
-- **Phase 8**: Security review, integration tests, end-to-end testing, deployment, and release preparation.
+- **Phase 7**: Mobile application integration, notifications, referral sharing, and full user flows. *(COMPLETED)*
+- **Phase 8**: Security review, integration tests, end-to-end testing, deployment, and release preparation. *(NEXT)*
 - **Phase 9**: Smart-lock integration after vendor selection.
