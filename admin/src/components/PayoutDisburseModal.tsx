@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { CheckCircle2, X, Wallet } from "lucide-react";
+import { CheckCircle2, X, Wallet, ShieldCheck, FileCheck2 } from "lucide-react";
 import type { PayoutRequest } from "../types";
 
 interface PayoutDisburseModalProps {
@@ -87,21 +87,35 @@ export const PayoutDisburseModal: React.FC<PayoutDisburseModalProps> = ({
             </div>
           </div>
 
-          <div className="form-group" style={{ marginTop: 14 }}>
-            <label>
-              Bank Transaction Reference / UTR Number <span style={{ color: "var(--accent-rose)" }}>*</span>
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="e.g. HDFCN20261021998822"
-              value={utrReference}
-              onChange={(e) => setUtrReference(e.target.value)}
-              autoFocus
-            />
-            <small style={{ color: "var(--text-muted)", fontSize: "11px", marginTop: 4, display: "block" }}>
-              Double-entry debit will be atomically booked to partner ledger upon confirmation.
-            </small>
+          {/* Structured UTR Disbursement Card */}
+          <div className="utr-disbursement-card">
+            <div className="utr-card-header">
+              <div className="utr-icon-badge">
+                <FileCheck2 size={16} />
+              </div>
+              <div>
+                <label className="utr-label">
+                  Bank Transaction Reference / UTR Number <span className="required-star">*</span>
+                </label>
+                <p className="utr-subtext">Remittance reference number from NEFT/RTGS/IMPS gateway</p>
+              </div>
+            </div>
+
+            <div className="utr-input-wrapper">
+              <input
+                type="text"
+                className="form-control utr-input-field"
+                placeholder="e.g. HDFCN20261021998822"
+                value={utrReference}
+                onChange={(e) => setUtrReference(e.target.value.toUpperCase())}
+                autoFocus
+              />
+            </div>
+
+            <div className="utr-compliance-note">
+              <ShieldCheck size={14} color="var(--accent-emerald-text)" style={{ flexShrink: 0 }} />
+              <span>Double-entry debit will be atomically booked to partner ledger upon confirmation.</span>
+            </div>
           </div>
         </div>
 

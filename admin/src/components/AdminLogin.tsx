@@ -96,7 +96,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
       setEmail("admin@aashrayo.in");
       setPassword("Aashrayo@Admin2026");
     } else {
-      setPhone("+91 99999 99999");
+      setPhone("+91 9876543210");
       setOtp("123456");
     }
     setError(null);
@@ -220,7 +220,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
                 <input
                   type="tel"
                   className="form-control-app"
-                  placeholder="+91 99999 99999"
+                  placeholder="+91 9876543210"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   required
