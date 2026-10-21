@@ -93,3 +93,41 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_superadmin(self) -> bool:
         """True if user is a Superadmin or Django superuser."""
         return self.role == self.Role.SUPERADMIN or self.is_superuser
+
+
+class PhoneOtp(models.Model):
+    """
+    Stores cryptographically hashed, time-limited OTP tokens for phone authentication.
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    phone = models.CharField(
+        max_length=20,
+        db_index=True,
+        help_text=_("Phone number for which OTP was requested."),
+    )
+    otp_hash = models.CharField(
+        max_length=255,
+        help_text=_("PBKDF2/SHA256 salted hash of 6-digit OTP code."),
+    )
+    expires_at = models.DateTimeField(
+        db_index=True,
+        help_text=_("Timestamp when the OTP expires (default 300 seconds)."),
+    )
+    attempts = models.IntegerField(
+        default=0,
+        help_text=_("Number of failed verification attempts (max 3)."),
+    )
+    is_consumed = models.BooleanField(
+        default=False,
+        help_text=_("True once the OTP has been successfully verified."),
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("phone OTP")
+        verbose_name_plural = _("phone OTPs")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"OTP for {self.phone} (consumed={self.is_consumed})"

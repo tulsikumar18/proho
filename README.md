@@ -90,9 +90,9 @@ npx expo start
 
 ## 5. Development Phases Roadmap
 - **Phase 0**: Requirements, architecture, repository and local development setup. *(COMPLETED)*
-- **Phase 1**: Django project, PostgreSQL, custom user model, migrations, permissions, error handling, and tests. *(NEXT)*
-- **Phase 2**: Authentication, partner profiles, KYC submission, and manual admin review.
-- **Phase 3**: Property inventory, media upload, listing approval, and search.
+- **Phase 1**: Django project, SQLite-first setup, custom user model, migrations, permissions, and test foundation. *(COMPLETED)*
+- **Phase 2**: Authentication (Phone OTP & JWT), partner profiles, KYC submission, and manual admin review. *(COMPLETED)*
+- **Phase 3**: Property inventory, media upload, listing approval, and search. *(NEXT)*
 - **Phase 4**: Leads, referral attribution, offers, bookings, visits, and OTP verification.
 - **Phase 5**: Commission rules, earnings ledger, statements, payout requests, and manual payout decisions.
 - **Phase 6**: Admin web dashboard for all required operational workflows.

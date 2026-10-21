@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [Phase 2] - 2026-10-21
+### Added
+- Phone OTP authentication flow (`POST /api/v1/auth/otp/request/` and `POST /api/v1/auth/otp/verify/`) with 300-second expiration, 3-attempt brute-force protection, salted SHA256/PBKDF2 hashing, and JWT issuance (`access` and `refresh`).
+- User profile endpoints (`GET /api/v1/auth/me/` and `PATCH /api/v1/auth/me/`) supporting bilingual preference (`en`/`hi`) and name management.
+- `apps.partners` application with models:
+  - `PartnerProfile`: business profile, base location, work areas list, RERA number, and KYC status.
+  - `KycSubmission`: document upload tracking for PAN, Aadhaar (last 4 digits only), and address proof.
+  - `BankAccount`: payout bank account records with masked account numbers (`****1234`) and regex-validated IFSC codes (`^[A-Z]{4}0[A-Z0-9]{6}$`).
+- Post-save signal automatically creating a `PartnerProfile` whenever a `CHANNEL_PARTNER` user is created.
+- `KycService` enforcing PAN format validation (`^[A-Z]{5}[0-9]{4}[A-Z]{1}$`), Aadhaar 4-digit masking, 5MB file size limits, and manual admin review workflows (`APPROVED` or `REJECTED` with mandatory justification).
+- Administrative KYC review endpoints (`GET /api/v1/admin/kyc/` with status filtering, `GET /api/v1/admin/kyc/{id}/`, and `POST /api/v1/admin/kyc/{id}/review/`).
+- Automated audit log recording for `KYC_SUBMITTED`, `KYC_APPROVED`, and `KYC_REJECTED` actions with actor, IP, and sanitized metadata.
+- 20 new automated pytest tests (39 tests total) covering OTP auth, KYC submission, PAN/Aadhaar/IFSC validation, file size limits, admin review, and partner isolation with 95% total code coverage.
+
 ## [Phase 1] - 2026-10-21
 ### Added
 - SQLite-first backend architecture (`backend/db.sqlite3`) for local development without PostgreSQL dependencies.
